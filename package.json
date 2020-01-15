@@ -1,0 +1,19 @@
+{
+  "name": "color-class",
+  "version": "0.0.1",
+  "description": "Color class that manipulates colors and converts them to CSS-compatible hex or rgba strings",
+  "main": "color.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsteinman/color-class.git"
+  },
+  "author": "Dan Steinman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dsteinman/color-class/issues"
+  },
+  "homepage": "https://github.com/dsteinman/color-class#readme"
+}
