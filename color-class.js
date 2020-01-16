@@ -2,26 +2,31 @@ var colorlib = require('./color-lib');
 var colorNames = require('./color-names');
 
 function isColor(c) {
-	return c instanceof Color;
+	return c instanceof ColorClass;
 }
 
-var Color = function () {
-	if (arguments.length===1 && typeof arguments[0]==='number' && arguments[0]>=0 && arguments[0]<=255) {
-		// greyscale
-		this.value = colorlib.rgb(arguments[0],arguments[0],arguments[0]);
+var ColorClass = function () {
+	var a = arguments[0];
+	if (isColor(a)) {
+		this.rgb = a.rgb.slice();
 	}
-	else if (isColor(arguments[0])) {
-		this.value = arguments[0].value;
+	else if (typeof a === 'object' && 'h' in a && 's' in a && 'l' in a) {
+		this.rgb = colorlib.hsl2rgb([a.h, a.s, a.l]);
+		if ('a' in a && a.a >= 0 && a.a < 1) {
+			this.rgb[3] = a.a;
+		}
+	}
+	else if (arguments.length === 1) {
+		this.rgb = colorlib.getRGB(a);
 	}
 	else {
-		this.value = (arguments.length > 0) ? colorlib.rgb.apply(null, Array.from(arguments)) : '#000';
+		this.rgb = colorlib.getRGB(Array.from(arguments));
 	}
-	return this.value;
 };
 
-Color.prototype = {
+ColorClass.prototype = {
 	toString: function () {
-		return this.value;
+		return colorlib.rgb2css(this.rgb);
 	},
 	
 	// setters
@@ -32,7 +37,7 @@ Color.prototype = {
 	 * @method alpha
 	 * @memberof Color
 	 * @param {Number} alpha transparency level between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -40,7 +45,7 @@ Color.prototype = {
 	 *
 	 */
 	alpha: function (v) {
-		return new Color(colorlib.alpha(this.value, v));
+		return new ColorClass(colorlib.alpha(this.rgb, v));
 	},
 	
 	/**
@@ -49,7 +54,7 @@ Color.prototype = {
 	 * @method lighten
 	 * @memberof Color
 	 * @param {Number} lightenBy amount to lighten between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -57,7 +62,7 @@ Color.prototype = {
 	 *
 	 */
 	lighten: function (v) {
-		return new Color(colorlib.lighten(this.value, v));
+		return new ColorClass(colorlib.lighten(this.rgb, v));
 	},
 	
 	/**
@@ -66,7 +71,7 @@ Color.prototype = {
 	 * @method darken
 	 * @memberof Color
 	 * @param {Number} darkenBy amount to darken between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -74,7 +79,7 @@ Color.prototype = {
 	 *
 	 */
 	darken: function (v) {
-		return new Color(colorlib.darken(this.value, v));
+		return new ColorClass(colorlib.darken(this.rgb, v));
 	},
 	
 	/**
@@ -83,7 +88,7 @@ Color.prototype = {
 	 * @method saturate
 	 * @memberof Color
 	 * @param {Number} saturateBy amount to saturate between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -91,7 +96,7 @@ Color.prototype = {
 	 *
 	 */
 	saturate: function (v) {
-		return new Color(colorlib.saturate(this.value, v));
+		return new ColorClass(colorlib.saturate(this.rgb, v));
 	},
 	
 	/**
@@ -100,7 +105,7 @@ Color.prototype = {
 	 * @method desaturate
 	 * @memberof Color
 	 * @param {Number} desaturateBy amount to desaturate between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -108,28 +113,7 @@ Color.prototype = {
 	 *
 	 */
 	desaturate: function (v) {
-		return new Color(colorlib.desaturate(this.value, v));
-	},
-	
-	/**
-	 * Modify the hue, lightness, and saturation of a color
-	 *
-	 * @method shiftHSL
-	 * @memberof Color
-	 * @param {Number} hue amount to change the hue by, between 0 and 1
-	 * @param {Number} saturation amount to change the hue by, between 0 and 1
-	 * @param {Number} lightness amount to change the hue by, between 0 and 1
-	 * @return {Color} new Color() instance
-	 * @instance
-	 *
-	 * @example
-	 * new Color(255,255,0).shiftHSL(0.1,0.2,0.3); // returns {value:"#94FF4D"}
-	 *
-	 */
-	shiftHSL: function (h, s, l, a) {
-		var c = new Color(colorlib.shiftHSL(this.value, h, s, l));
-		if (a) c = c.alpha(a);
-		return c;
+		return new ColorClass(colorlib.desaturate(this.rgb, v));
 	},
 	
 	/**
@@ -138,7 +122,7 @@ Color.prototype = {
 	 * @method shiftHue
 	 * @memberof Color
 	 * @param {Number} hueShift amount to modify the hue by between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -146,7 +130,7 @@ Color.prototype = {
 	 *
 	 */
 	shiftHue: function (v) {
-		return new Color(colorlib.shiftHue(this.value, v));
+		return new ColorClass(colorlib.shiftHue(this.rgb, v));
 	},
 	
 	/**
@@ -156,7 +140,7 @@ Color.prototype = {
 	 * @memberof Color
 	 * @param {Object} targetColor color string, array, or object
 	 * @param {Number} [amount=0.5] how close to the target color between 0 and 1 (0.5 is half-way between)
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -165,19 +149,19 @@ Color.prototype = {
 	 *
 	 */
 	combine: function (t, v) {
-		if (isColor(t)) t = t.value;
-		var c = colorlib.combine(this.value, t, v);
-		return new Color(c);
+		var combineColor = new ColorClass(t);
+		var c = colorlib.combine(this.rgb, combineColor.rgb, v);
+		return new ColorClass(c);
 	},
 	
 	/**
-	 * Shifts the "hue" of a color closer to another color by a given percentage
+	 * Shifts only the hue of a color closer to another color by a given percentage
 	 *
 	 * @method tint
 	 * @memberof Color
 	 * @param {String} targetColor color string or array
 	 * @param {Number} amount amount to shift the hue toward the target color between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -186,8 +170,8 @@ Color.prototype = {
 	 *
 	 */
 	tint: function (t, v) {
-		if (isColor(t)) t = t.value;
-		return new Color(colorlib.tint(this.value, t, v));
+		var tintColor = new ColorClass(t);
+		return new ColorClass(colorlib.tint(this.rgb, tintColor.rgb, v));
 	},
 	
 	/**
@@ -196,7 +180,7 @@ Color.prototype = {
 	 * @method hue
 	 * @memberof Color
 	 * @param {Number} hue hue value between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -206,7 +190,7 @@ Color.prototype = {
 	 *
 	 */
 	hue: function (v) {
-		return new Color(colorlib.hue(this.value, v));
+		return new ColorClass(colorlib.hue(this.rgb, v));
 	},
 	
 	/**
@@ -215,7 +199,7 @@ Color.prototype = {
 	 * @method saturation
 	 * @memberof Color
 	 * @param {Number} saturation saturation value between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -225,7 +209,7 @@ Color.prototype = {
 	 *
 	 */
 	saturation: function (v) {
-		return new Color(colorlib.saturation(this.value, v));
+		return new ColorClass(colorlib.saturation(this.rgb, v));
 	},
 	
 	/**
@@ -234,7 +218,7 @@ Color.prototype = {
 	 * @method lightness
 	 * @memberof Color
 	 * @param {Number} lightness lightness value between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -244,7 +228,7 @@ Color.prototype = {
 	 *
 	 */
 	lightness: function (v) {
-		return new Color(colorlib.lightness(this.value, v));
+		return new ColorClass(colorlib.lightness(this.rgb, v));
 	},
 	
 	/**
@@ -252,7 +236,7 @@ Color.prototype = {
 	 *
 	 * @method invert
 	 * @memberof Color
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -261,31 +245,7 @@ Color.prototype = {
 	 *
 	 */
 	invert: function () {
-		return new Color(colorlib.invert(this.value));
-	},
-	
-	/**
-	 * Modify the red, green, or blue component of a color
-	 *
-	 * @method rgb
-	 * @memberof Color
-	 * @param {Number} red red component (0-255)
-	 * @param {Number} green green component (0-255)
-	 * @param {Number} blue blue component (0-255)
-	 * @return {Color} new Color() instance
-	 * @instance
-	 *
-	 * @example
-	 * new Color('#f00').rgb(null,null,255); // returns {value:"#F0F"}
-	 * new Color('#0f0').rgb(null,255,null); // returns {value:"#0F0"}
-	 * new Color('#ff0').rgb(null,null,255); // returns {value:"#FFF"}
-	 * new Color('#fff').rgb(100);           // returns {value:"#64FFFF"}
-	 *
-	 */
-	rgb: function () {
-		var a = Array.from(arguments);
-		a.unshift(this.value);
-		return new Color(colorlib.setRGB.apply(null, a));
+		return new ColorClass(colorlib.invert(this.rgb));
 	},
 	
 	/**
@@ -296,7 +256,7 @@ Color.prototype = {
 	 * @param {Number} hue hue value between 0 and 1
 	 * @param {Number} saturation saturation value between 0 and 1
 	 * @param {Number} lightness lightness value between 0 and 1
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -305,8 +265,8 @@ Color.prototype = {
 	 */
 	hsl: function () {
 		var a = Array.from(arguments);
-		a.unshift(this.value);
-		return new Color(colorlib.setHSL.apply(null, a));
+		a.unshift(this.rgb);
+		return new ColorClass(colorlib.setHSL.apply(null, a));
 	},
 	
 	/**
@@ -315,7 +275,7 @@ Color.prototype = {
 	 * @method red
 	 * @memberof Color
 	 * @param {Number} red red component 0-255
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -323,7 +283,7 @@ Color.prototype = {
 	 *
 	 */
 	red: function (r) {
-		return this.rgb(r);
+		return new ColorClass(colorlib.setRGB(this.rgb, [r]));
 	},
 	
 	/**
@@ -332,7 +292,7 @@ Color.prototype = {
 	 * @method green
 	 * @memberof Color
 	 * @param {Number} green green component 0-255
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -340,7 +300,7 @@ Color.prototype = {
 	 *
 	 */
 	green: function (g) {
-		return this.rgb(null, g);
+		return new ColorClass(colorlib.setRGB(this.rgb, [null, g]));
 	},
 	
 	/**
@@ -349,7 +309,7 @@ Color.prototype = {
 	 * @method blue
 	 * @memberof Color
 	 * @param {Number} blue blue component 0-255
-	 * @return {Color} new Color() instance
+	 * @return {ColorClass} new Color() instance
 	 * @instance
 	 *
 	 * @example
@@ -357,7 +317,7 @@ Color.prototype = {
 	 *
 	 */
 	blue: function (b) {
-		return this.rgb(null, null, b);
+		return new ColorClass(colorlib.setRGB(this.rgb, [null, null, b]));
 	},
 	
 	// getters
@@ -376,24 +336,7 @@ Color.prototype = {
 	 *
 	 */
 	getAlpha: function () {
-		return colorlib.getAlpha(this.value);
-	},
-	
-	/**
-	 * Returns the computed red, green, blue, and alpha values as an array
-	 *
-	 * @method getRGB
-	 * @memberof Color
-	 * @return {Number[]} rgb array
-	 * @instance
-	 *
-	 * @example
-	 * new Color('#F00').getRGB(); // returns [255,0,0]
-	 * new Color('rgba(255,0,0,0.5)').getRGB()(); // returns [255,0,0,0.5]
-	 *
-	 */
-	getRGB: function () {
-		return colorlib.getRGB(this.value);
+		return (this.rgb.length===4)? this.rgb[3] : 1;
 	},
 	
 	/**
@@ -401,17 +344,15 @@ Color.prototype = {
 	 *
 	 * @method getHex
 	 * @memberof Color
-	 * @param {Boolean} full return the full 6 character hexidecimal value (eg. do not shorten #FFFFFF to #FFF)
 	 * @return {String} hex color value
 	 * @instance
 	 *
 	 * @example
-	 * new Color('rgba(255,0,0,0.5)').getHex(); // returns "#F0F"
-	 * new Color('rgba(255,0,0,0.5)').getHex(true); // returns "#FF0000"
+	 * new Color('rgba(255,0,0,0.5)').getHex(); // returns "#f00"
 	 *
 	 */
-	getHex: function(full) {
-		return colorlib.getHex(this.value, full);
+	getHex: function() {
+		return colorlib.rgb2hex(this.rgb);
 	},
 	
 	/**
@@ -427,7 +368,7 @@ Color.prototype = {
 	 *
 	 */
 	getRed: function () {
-		return this.getRGB()[0];
+		return this.rgb[0];
 	},
 	
 	/**
@@ -443,7 +384,7 @@ Color.prototype = {
 	 *
 	 */
 	getGreen: function () {
-		return this.getRGB()[1];
+		return this.rgb[1];
 	},
 	
 	/**
@@ -459,7 +400,7 @@ Color.prototype = {
 	 *
 	 */
 	getBlue: function () {
-		return this.getRGB()[2];
+		return this.rgb[2];
 	},
 	
 	/**
@@ -475,7 +416,7 @@ Color.prototype = {
 	 *
 	 */
 	getHSL: function () {
-		return colorlib.getHSL(this.value);
+		return colorlib.getHSL(this.rgb);
 	},
 	
 	/**
@@ -504,7 +445,7 @@ Color.prototype = {
 	 * @memberof Color
 	 * @return {Number} saturation saturation value between 0 and 1
 	 * @instance
-	 *
+	 v
 	 * @example
 	 * new Color('rgb(100,100,100)').getSaturation(); // returns 0
 	 * new Color('rgb(100,50,100)').getSaturation();  // returns 0.8333333333333334
@@ -534,8 +475,5 @@ Color.prototype = {
 	}
 };
 
-Color.prototype.rgba = Color.prototype.rgb;
-Color.prototype.hsla = Color.prototype.hsl;
-
-module.exports = Color;
+module.exports = ColorClass;
 module.exports.names = colorNames;

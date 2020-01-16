@@ -5,7 +5,7 @@ var isArray = function (o) {
 };
 var isRGBAArray = function (a) {
 	if (isArray(a) && a.length === 3 || a.length === 4) {
-		for (let i=0;i<3;i++) {
+		for (var i=0;i<3;i++) {
 			if (typeof a[i] !== 'number' || !(a[i] >= 0 && a[i] <= 255)) {
 				return false;
 			}
@@ -20,22 +20,12 @@ var isRGBAArray = function (a) {
 	return false;
 };
 
-var isString = function (o) {
-	return typeof o === 'string' || o instanceof String;
-};
-
-function alpha(color, a) {
-	if (typeof a === 'number' && a >= 0 && a <= 1) {
-		var c = getRGB(color);
-		return rgb(c[0], c[1], c[2], a);
-	}
-	return color;
+function alpha(c, a) {
+	return [c[0], c[1], c[2], a];
 }
 
 function lighten(c, l) {
-	if (c.value) c = c.value;
-	else if (typeof l === 'undefined') return c;
-	return rgb(shiftHSL(c, 0, 0, l));
+	return shiftHSL(c, 0, 0, l);
 }
 
 function darken(c, l) {
@@ -43,9 +33,7 @@ function darken(c, l) {
 }
 
 function saturate(c, s) {
-	if (c.value) c = c.value;
-	if (typeof s === 'undefined') return c;
-	return rgb(shiftHSL(c, 0, s, 0));
+	return shiftHSL(c, 0, s, 0);
 }
 
 function desaturate(c, s) {
@@ -83,18 +71,10 @@ function hsl2rgb(hsl) {
 	else return [r, g, b];
 }
 
-function hsl(h, s, l, a) {
-	var x = [h / 360, s / 100, l / 100];
-	var r = hsl2rgb(x).map(Math.round);
-	if (arguments.length === 4) r[3] = a;
-	return rgb(r);
-}
-
-function shiftHSL(c, h, s, l) {
+function shiftHSL(o, h, s, l) {
 	if (typeof h === 'undefined') h = 0;
 	if (typeof s === 'undefined') s = 0;
 	if (typeof l === 'undefined') l = 0;
-	var o = getRGB(c);
 	var x = getHSL(o);
 	x[0] += h;
 	if (x[0] < 0) x[0] += 1;
@@ -112,18 +92,17 @@ function shiftHSL(c, h, s, l) {
 
 function shiftHue(c, h) {
 	if (typeof h === 'undefined') return c;
-	return rgb(shiftHSL(c, h, 0, 0));
+	return shiftHSL(c, h, 0, 0);
 }
 
-function combine(sourceColor, targetColor, amount) {
-	amount = amount || 0.5;
-	var al = getAlpha(sourceColor);
-	var s = getRGB(sourceColor);
-	var t = getRGB(targetColor);
+function combine(s, t, amount) {
+	amount = typeof amount==='number'? amount : 0.5;
 	var r = Math.round((t[0] - s[0]) * amount);
 	var g = Math.round((t[1] - s[1]) * amount);
 	var b = Math.round((t[2] - s[2]) * amount);
-	return rgb(s[0] + r, s[1] + g, s[2] + b, al);
+	var rgb = [s[0] + r, s[1] + g, s[2] + b];
+	if (s.length === 4) rgb[3] = s[3];
+	return rgb;
 }
 
 function tint(sourceColor, targetColor, amount) {
@@ -133,7 +112,7 @@ function tint(sourceColor, targetColor, amount) {
 	if (diff > 0 && diff > 0.5) diff -= 1;
 	else if (diff < 0 && diff < -0.5) diff += 1;
 	var dH = diff * amount;
-	return rgb(shiftHSL(sourceColor, dH, null, null));
+	return shiftHSL(sourceColor, dH, null, null);
 }
 
 function hue(c, h) {
@@ -153,61 +132,49 @@ function setHSL(c, h, s, l) {
 	if (typeof h === 'undefined' || h === null) h = x[0];
 	if (typeof s === 'undefined' || s === null) s = x[1];
 	if (typeof l === 'undefined' || l === null) l = x[2];
-	if (x.length === 4) return rgb(hsl2rgb([h, s, l, x[3]]));
-	else return rgb(hsl2rgb([h, s, l]));
+	if (x.length === 4) return hsl2rgb([h, s, l, x[3]]);
+	else return hsl2rgb([h, s, l]);
 }
 
-function getValue(r) {
+function rgb2css(r) {
 	if (r.length === 4) {
 		if (r[3] >= 0 && r[3] < 1) {
+			if (r[3] === 0) return 'transparent';
 			return 'rgba(' + r[0] + ',' + r[1] + ',' + r[2] + ',' + r[3] + ')';
 		}
 	}
-	return getHex(r);
+	return rgb2hex(r);
 }
 
-function rgb() {
-	if (arguments.length === 1) {
-		var a = arguments[0];
-		if (typeof a === 'string') {
-			var r = getRGB(a);
-			if (r) {
-				return getValue(r);
-			}
-			else {
-				var colStr = a.toLowerCase();
-				if (colStr in colorNames) {
-					return colorNames[colStr];
-				}
-				else {
-					throw new Error('invalid color string');
-				}
-			}
-		}
-		else if (isRGBAArray(a)) {
-			if (a.length === 3 || (a.length === 4 && a[3] === 1)) {
-				return getHex(a);
-			}
-			else if (a.length === 4) {
-				return 'rgba(' + Math.round(a[0]) + ',' + Math.round(a[1]) + ',' + Math.round(a[2]) + ',' + a[3] + ')';
-			}
-		}
-	} else if (arguments.length === 3 || arguments.length === 4) {
-		let arr = Array.from(arguments);
-		if (isRGBAArray(arr)) {
-			return getValue(arr);
+function getColorName(a) {
+	var colStr = a.toLowerCase();
+	if (colStr in colorNames) {
+		return colorNames[colStr];
+	}
+	if (/ 1$/.test(colStr)) {
+		// some color names had a 1 (eg. "blue 1') but none without the 1
+		// the 1's were removed from colorNames, and this code was added to support either case
+		var noOne = colStr.replace(/ 1$/,'');
+		if (noOne in colorNames) {
+			return colorNames[noOne];
 		}
 	}
-	throw new Error('invalid color data');
 }
 
-function setRGB(c, r, g, b, a) {
-	c = getRGB(c);
-	if (typeof r === 'number') c[0] = r;
-	if (typeof g === 'number') c[1] = g;
-	if (typeof b === 'number') c[2] = b;
-	if (typeof a === 'number') c[3] = a;
-	return rgb(c);
+function isValidNumber(r) {
+	return typeof r === 'number' && r >= 0 && r <= 255;
+}
+function isValidAlpha(r) {
+	return typeof r === 'number' && r >= 0 && r < 1;
+}
+
+function setRGB(oldc, newc) {
+	var c = oldc.slice();
+	if (isValidNumber(newc[0])) c[0] = newc[0];
+	if (isValidNumber(newc[1])) c[1] = newc[1];
+	if (isValidNumber(newc[2])) c[2] = newc[2];
+	if (isValidAlpha(newc[3])) c[3] = newc[3];
+	return c;
 }
 
 function getAlpha(color) {
@@ -216,14 +183,16 @@ function getAlpha(color) {
 	return 0;
 }
 
+function hex2rgb(h) {
+	if (/^#[0-9a-f]{6}$/i.test(h)) return [parseInt(h.substring(1, 3), 16), parseInt(h.substring(3, 5), 16), parseInt(h.substring(5, 7), 16)];
+	if (/^#[0-9a-f]{3}$/i.test(h)) return [parseInt(h[1] + h[1], 16), parseInt(h[2] + h[2], 16), parseInt(h[3] + h[3], 16)];
+	throw new Error('invalid color hex');
+}
 function getRGB() {
 	if (typeof arguments[0] === 'string') {
 		var c = arguments[0];
 		if (/^#/.test(c)) {
-			var h = c.substring(1);
-			if (/^[0-9a-f]{6}$/i.test(h)) return [parseInt(h.substring(0, 2), 16), parseInt(h.substring(2, 4), 16), parseInt(h.substring(4, 6), 16)];
-			if (/^[0-9a-f]{3}$/i.test(h)) return [parseInt(h[0] + h[0], 16), parseInt(h[1] + h[1], 16), parseInt(h[2] + h[2], 16)];
-			return [0, 0, 0];
+			return hex2rgb(c);
 		}
 		var m;
 		if (m = c.match(/rgb\( ?(\d+), ?(\d+), ?(\d+) ?\)/)) {
@@ -232,33 +201,36 @@ function getRGB() {
 		if (m = c.match(/rgba\( ?(\d+), ?(\d+), ?(\d+), ?(\d+.?\d*) ?\)/)) {
 			return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), parseFloat(m[4])];
 		}
+		
+		var name = getColorName(c);
+		if (name) {
+			// return hex2rgb(name);
+			return name;
+		}
+		
+		throw new Error('invalid color string');
 	}
-	else if (isArray(arguments[0])) {
+	else if (isRGBAArray(arguments[0])) {
 		return arguments[0];
 	}
+	else {
+		throw new Error('invalid color data');
+	}
 }
 
-function getRed(c) {
-	return getRGB(c)[0];
+function rgb2hex(c) {
+	var r = int2hex(Math.round(c[0]));
+	var g = int2hex(Math.round(c[1]));
+	var b = int2hex(Math.round(c[2]));
+	if (r[0] === r[1] && g[0] === g[1] && b[0] === b[1]) return ('#' + r[0] + g[0] + b[0]).toLowerCase();
+	return ('#' + r + g + b).toLowerCase();
 }
 
-function getGreen(c) {
-	return getRGB(c)[1];
-}
-
-function getBlue(c) {
-	return getRGB(c)[2];
-}
-
-function getHex(color, full) {
+function getHex(color) {
 	if (color) {
 		var c = getRGB(color);
 		if (c) {
-			var r = int2hex(Math.round(c[0]));
-			var g = int2hex(Math.round(c[1]));
-			var b = int2hex(Math.round(c[2]));
-			if (!full && r[0] === r[1] && g[0] === g[1] && b[0] === b[1]) return ('#' + r[0] + g[0] + b[0]).toLowerCase();
-			return ('#' + r + g + b).toLowerCase();
+			return rgb2hex(color);
 		}
 	}
 	return '#000';
@@ -269,13 +241,7 @@ function int2hex(i) {
 	return v.length === 1 ? '0' + v : v;
 }
 
-function getHSL(color) {
-	var rgb;
-	if (isArray(color)) rgb = color;
-	else if (isString(color)) rgb = getRGB(color);
-	else {
-		return [0, 0, 0];
-	}
+function getHSL(rgb) {
 	var r = rgb[0] / 255;
 	var g = rgb[1] / 255;
 	var b = rgb[2] / 255;
@@ -296,6 +262,7 @@ function getHSL(color) {
 		h /= 6;
 		if (h < 0) h += 1;
 	}
+	
 	if (rgb.length === 4) return [h, s, l, rgb[3]];
 	else return [h, s, l];
 }
@@ -304,23 +271,17 @@ function getHue(c) {
 	return getHSL(c)[0];
 }
 
-function getSaturation(c) {
-	return getHSL(c)[1];
-}
-
-function getLightness(c) {
-	return getHSL(c)[2];
-}
-
-function invert(color) {
-	var rgba = getRGB(color);
+function invert(c) {
+	var rgba = c.slice();
 	for (var i = 0; i < 3; i++) {
 		rgba[i] = 255 - rgba[i];
 	}
-	return rgb(rgba);
+	return rgba;
 }
 
 module.exports = {
+	rgb2hex: rgb2hex,
+	rgb2css: rgb2css,
 	hsl2rgb: hsl2rgb,
 	hslval: hslval,
 	int2hex: int2hex,
@@ -336,22 +297,11 @@ module.exports = {
 	hue: hue,
 	saturation: saturation,
 	lightness: lightness,
-	hsl: hsl,
-	hsla: hsl,
 	setHSL: setHSL,
-	rgb: rgb,
-	rgba: rgb,
 	setRGB: setRGB,
 	getAlpha: getAlpha,
 	getRGB: getRGB,
-	getRed: getRed,
-	getGreen: getGreen,
-	getBlue: getBlue,
 	getHex: getHex,
 	getHSL: getHSL,
-	getHue: getHue,
-	getSaturation: getSaturation,
-	getLightness: getLightness,
 	invert: invert
 };
-	
