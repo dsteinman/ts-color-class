@@ -108,6 +108,11 @@ new Color('red').alpha(0.5).toString();
 
 lighten
 
+```
+new Color('red').lighten(0.5).toString();
+// returns '#ff8080'
+```
+
 darken
 
 saturate
