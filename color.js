@@ -1,15 +1,21 @@
+var colorlib = require('./color-lib');
+
 function isColor(c) {
 	return c instanceof Color;
 }
 
-var colors = require('./colors');
-
 var Color = function () {
 	if (arguments.length===1 && typeof arguments[0]==='number' && arguments[0]>=0 && arguments[0]<=255) {
-		return this.value = colors.rgb(arguments[0],arguments[0],arguments[0]);
+		// greyscale
+		this.value = colorlib.rgb(arguments[0],arguments[0],arguments[0]);
 	}
-	if (isColor(arguments[0])) this.value = arguments[0].value;
-	else this.value = (arguments.length > 0) ? colors.rgb.apply(null, Array.from(arguments)) : '#000';
+	else if (isColor(arguments[0])) {
+		this.value = arguments[0].value;
+	}
+	else {
+		this.value = (arguments.length > 0) ? colorlib.rgb.apply(null, Array.from(arguments)) : '#000';
+	}
+	return this.value;
 };
 
 Color.prototype = {
@@ -33,7 +39,7 @@ Color.prototype = {
 	 *
 	 */
 	alpha: function (v) {
-		return new Color(colors.alpha(this.value, v));
+		return new Color(colorlib.alpha(this.value, v));
 	},
 	
 	/**
@@ -50,7 +56,7 @@ Color.prototype = {
 	 *
 	 */
 	lighten: function (v) {
-		return new Color(colors.lighten(this.value, v));
+		return new Color(colorlib.lighten(this.value, v));
 	},
 	
 	/**
@@ -67,7 +73,7 @@ Color.prototype = {
 	 *
 	 */
 	darken: function (v) {
-		return new Color(colors.darken(this.value, v));
+		return new Color(colorlib.darken(this.value, v));
 	},
 	
 	/**
@@ -84,7 +90,7 @@ Color.prototype = {
 	 *
 	 */
 	saturate: function (v) {
-		return new Color(colors.saturate(this.value, v));
+		return new Color(colorlib.saturate(this.value, v));
 	},
 	
 	/**
@@ -101,7 +107,7 @@ Color.prototype = {
 	 *
 	 */
 	desaturate: function (v) {
-		return new Color(colors.desaturate(this.value, v));
+		return new Color(colorlib.desaturate(this.value, v));
 	},
 	
 	/**
@@ -120,7 +126,7 @@ Color.prototype = {
 	 *
 	 */
 	shiftHSL: function (h, s, l, a) {
-		var c = new Color(colors.shiftHSL(this.value, h, s, l));
+		var c = new Color(colorlib.shiftHSL(this.value, h, s, l));
 		if (a) c = c.alpha(a);
 		return c;
 	},
@@ -139,7 +145,7 @@ Color.prototype = {
 	 *
 	 */
 	shiftHue: function (v) {
-		return new Color(colors.shiftHue(this.value, v));
+		return new Color(colorlib.shiftHue(this.value, v));
 	},
 	
 	/**
@@ -159,7 +165,7 @@ Color.prototype = {
 	 */
 	combine: function (t, v) {
 		if (isColor(t)) t = t.value;
-		var c = colors.combine(this.value, t, v);
+		var c = colorlib.combine(this.value, t, v);
 		return new Color(c);
 	},
 	
@@ -180,7 +186,7 @@ Color.prototype = {
 	 */
 	tint: function (t, v) {
 		if (isColor(t)) t = t.value;
-		return new Color(colors.tint(this.value, t, v));
+		return new Color(colorlib.tint(this.value, t, v));
 	},
 	
 	/**
@@ -199,7 +205,7 @@ Color.prototype = {
 	 *
 	 */
 	hue: function (v) {
-		return new Color(colors.hue(this.value, v));
+		return new Color(colorlib.hue(this.value, v));
 	},
 	
 	/**
@@ -218,7 +224,7 @@ Color.prototype = {
 	 *
 	 */
 	saturation: function (v) {
-		return new Color(colors.saturation(this.value, v));
+		return new Color(colorlib.saturation(this.value, v));
 	},
 	
 	/**
@@ -237,7 +243,7 @@ Color.prototype = {
 	 *
 	 */
 	lightness: function (v) {
-		return new Color(colors.lightness(this.value, v));
+		return new Color(colorlib.lightness(this.value, v));
 	},
 	
 	/**
@@ -254,7 +260,7 @@ Color.prototype = {
 	 *
 	 */
 	invert: function () {
-		return new Color(colors.invert(this.value));
+		return new Color(colorlib.invert(this.value));
 	},
 	
 	/**
@@ -278,7 +284,7 @@ Color.prototype = {
 	rgb: function () {
 		var a = Array.from(arguments);
 		a.unshift(this.value);
-		return new Color(colors.setRGB.apply(null, a));
+		return new Color(colorlib.setRGB.apply(null, a));
 	},
 	
 	/**
@@ -299,7 +305,7 @@ Color.prototype = {
 	hsl: function () {
 		var a = Array.from(arguments);
 		a.unshift(this.value);
-		return new Color(colors.setHSL.apply(null, a));
+		return new Color(colorlib.setHSL.apply(null, a));
 	},
 	
 	/**
@@ -369,7 +375,7 @@ Color.prototype = {
 	 *
 	 */
 	getAlpha: function () {
-		return colors.getAlpha(this.value);
+		return colorlib.getAlpha(this.value);
 	},
 	
 	/**
@@ -386,7 +392,7 @@ Color.prototype = {
 	 *
 	 */
 	getRGB: function () {
-		return colors.getRGB(this.value);
+		return colorlib.getRGB(this.value);
 	},
 	
 	/**
@@ -404,7 +410,7 @@ Color.prototype = {
 	 *
 	 */
 	getHex: function(full) {
-		return colors.getHex(this.value, full);
+		return colorlib.getHex(this.value, full);
 	},
 	
 	/**
@@ -468,7 +474,7 @@ Color.prototype = {
 	 *
 	 */
 	getHSL: function () {
-		return colors.getHSL(this.value);
+		return colorlib.getHSL(this.value);
 	},
 	
 	/**

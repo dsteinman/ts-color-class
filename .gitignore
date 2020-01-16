@@ -1,0 +1,10 @@
+node_modules/
+build/
+*.out
+npm-debug.log
+.DS_STORE
+.idea
+.node_history
+public/
+.log
+yarn.lock

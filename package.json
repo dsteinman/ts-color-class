@@ -4,7 +4,8 @@
   "description": "Color class that manipulates colors and converts them to CSS-compatible hex or rgba strings",
   "main": "color.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha --recursive ./test/config.js ./test",
+    "test:watch": "NODE_ENV=test nodemon -w . -e js -x mocha --recursive ./test/config.js ./test"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/dsteinman/color-class/issues"
   },
-  "homepage": "https://github.com/dsteinman/color-class#readme"
+  "homepage": "https://github.com/dsteinman/color-class#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.0.0"
+  }
 }

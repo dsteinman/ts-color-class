@@ -1,5 +1,23 @@
+var colorNames = require('./color-names');
+
 var isArray = function (o) {
 	return typeof o === 'object' && Object.prototype.toString.apply(o) === '[object Array]';
+};
+var isRGBAArray = function (a) {
+	if (isArray(a) && a.length === 3 || a.length === 4) {
+		for (let i=0;i<3;i++) {
+			if (typeof a[i] !== 'number' || !(a[i] >= 0 && a[i] <= 255)) {
+				return false;
+			}
+		}
+		if (a.length === 4) {
+			if (typeof a[3] !== 'number' || !(a[3] >= 0 && a[3] <= 1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 };
 
 var isString = function (o) {
@@ -26,7 +44,7 @@ function darken(c, l) {
 
 function saturate(c, s) {
 	if (c.value) c = c.value;
-	else if (typeof s === 'undefined') return c;
+	if (typeof s === 'undefined') return c;
 	return rgb(shiftHSL(c, 0, s, 0));
 }
 
@@ -139,27 +157,48 @@ function setHSL(c, h, s, l) {
 	else return rgb(hsl2rgb([h, s, l]));
 }
 
+function getValue(r) {
+	if (r.length === 4) {
+		if (r[3] >= 0 && r[3] < 1) {
+			return 'rgba(' + r[0] + ',' + r[1] + ',' + r[2] + ',' + r[3] + ')';
+		}
+	}
+	return getHex(r);
+}
+
 function rgb() {
 	if (arguments.length === 1) {
 		var a = arguments[0];
 		if (typeof a === 'string') {
 			var r = getRGB(a);
-			if (isArray(r)) return rgb(r);
-			else return getHex(r);
+			if (r) {
+				return getValue(r);
+			}
+			else {
+				var colStr = a.toLowerCase();
+				if (colStr in colorNames) {
+					return colorNames[colStr];
+				}
+				else {
+					throw new Error('invalid color string');
+				}
+			}
 		}
-		if (isArray(a) && a.length === 3) {
-			return getHex(a);
+		else if (isRGBAArray(a)) {
+			if (a.length === 3 || (a.length === 4 && a[3] === 1)) {
+				return getHex(a);
+			}
+			else if (a.length === 4) {
+				return 'rgba(' + Math.round(a[0]) + ',' + Math.round(a[1]) + ',' + Math.round(a[2]) + ',' + a[3] + ')';
+			}
 		}
-		if (isArray(a) && a.length === 4) {
-			return 'rgba(' + Math.round(a[0]) + ',' + Math.round(a[1]) + ',' + Math.round(a[2]) + ',' + a[3] + ')';
+	} else if (arguments.length === 3 || arguments.length === 4) {
+		let arr = Array.from(arguments);
+		if (isRGBAArray(arr)) {
+			return getValue(arr);
 		}
-	} else if (arguments.length === 3) {
-		return getHex(Array.from(arguments));
-	} else if (arguments.length === 4) {
-		if (typeof arguments[3] === 'number' && arguments[3] > 0 && arguments[3] <= 1) {
-			return 'rgba(' + Math.round(arguments[0]) + ',' + Math.round(arguments[1]) + ',' + Math.round(arguments[2]) + ',' + arguments[3] + ')';
-		} else return getHex(Array.from(arguments));
 	}
+	throw new Error('invalid color data');
 }
 
 function setRGB(c, r, g, b, a) {
@@ -178,7 +217,6 @@ function getAlpha(color) {
 }
 
 function getRGB() {
-	if (isArray(arguments[0])) return arguments[0];
 	if (typeof arguments[0] === 'string') {
 		var c = arguments[0];
 		if (/^#/.test(c)) {
@@ -188,15 +226,16 @@ function getRGB() {
 			return [0, 0, 0];
 		}
 		var m;
-		if (m = c.match(/rgb\((\d+.?\d*), ?(\d+.?\d*), ?(\d+.?\d*)\)/)) {
+		if (m = c.match(/rgb\( ?(\d+), ?(\d+), ?(\d+) ?\)/)) {
 			return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3])];
 		}
-		if (m = c.match(/rgba\((\d+.?\d*), ?(\d+.?\d*), ?(\d+.?\d*), ?(\d+.?\d*)\)/)) {
-			return [Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4])];
-		} else {
+		if (m = c.match(/rgba\( ?(\d+), ?(\d+), ?(\d+), ?(\d+.?\d*) ?\)/)) {
+			return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), parseFloat(m[4])];
 		}
 	}
-	
+	else if (isArray(arguments[0])) {
+		return arguments[0];
+	}
 }
 
 function getRed(c) {
@@ -218,8 +257,8 @@ function getHex(color, full) {
 			var r = int2hex(Math.round(c[0]));
 			var g = int2hex(Math.round(c[1]));
 			var b = int2hex(Math.round(c[2]));
-			if (!full && r[0] === r[1] && g[0] === g[1] && b[0] === b[1]) return ('#' + r[0] + g[0] + b[0]).toUpperCase();
-			return ('#' + r + g + b).toUpperCase();
+			if (!full && r[0] === r[1] && g[0] === g[1] && b[0] === b[1]) return ('#' + r[0] + g[0] + b[0]).toLowerCase();
+			return ('#' + r + g + b).toLowerCase();
 		}
 	}
 	return '#000';
@@ -235,7 +274,6 @@ function getHSL(color) {
 	if (isArray(color)) rgb = color;
 	else if (isString(color)) rgb = getRGB(color);
 	else {
-		console.log('no rgb for ', color);
 		return [0, 0, 0];
 	}
 	var r = rgb[0] / 255;
