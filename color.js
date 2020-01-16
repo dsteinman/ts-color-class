@@ -1,4 +1,5 @@
 var colorlib = require('./color-lib');
+var colorNames = require('./color-names');
 
 function isColor(c) {
 	return c instanceof Color;
@@ -537,3 +538,4 @@ Color.prototype.rgba = Color.prototype.rgb;
 Color.prototype.hsla = Color.prototype.hsl;
 
 module.exports = Color;
+module.exports.names = colorNames;
