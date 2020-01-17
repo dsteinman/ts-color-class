@@ -17,7 +17,7 @@ This module is a more simple alternative to the npm module [color](https://www.n
 - no dependencies
 - small build size (20KB or 7KB without color names)
 
-## API
+## Documentation
 
 - [Color Class API](https://dsteinman.github.io/color-class/api/Color.html)
 
