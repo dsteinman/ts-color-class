@@ -1,4 +1,4 @@
-Color Class
+JavaScript Color Class
 -----------
 
 An opinionated JavaScript Color class.  This is what the JavaScript language should provide as the de facto `Color` object.
@@ -26,7 +26,7 @@ This module is a more simple alternative to the npm module [color](https://www.n
 #### Use NPM Module
 
 ```
-import Color from 'color-class';
+import Color from 'js-color-class';
 ```
 
 #### Or Use The Static Build
