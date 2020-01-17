@@ -19,7 +19,7 @@ This module is a more simple alternative to the npm module [color](https://www.n
 
 ## API
 
-- [https://dsteinman.github.io/color-class/api/](https://dsteinman.github.io/color-class/api/)
+- [Color Class API](https://dsteinman.github.io/color-class/api/Color.html)
 
 ## Install
 
