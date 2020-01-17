@@ -1,5 +1,5 @@
 {
-  "name": "color-class",
+  "name": "@dsteinman/color-class",
   "version": "0.9.0",
   "description": "Color class that manipulates colors and converts them to CSS-compatible hex or rgba strings",
   "main": "color-class.js",
