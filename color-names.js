@@ -484,6 +484,7 @@ module.exports = {
 	"tomato 2": [238, 92, 66],
 	"tomato 3": [205, 79, 57],
 	"tomato 4": [139, 54, 38],
+	"transparent": [0, 0, 0, 0],
 	"turquoise": [64, 224, 208],
 	"turquoise 1": [0, 245, 255],
 	"turquoise 2": [0, 229, 238],

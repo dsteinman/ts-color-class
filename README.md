@@ -3,19 +3,23 @@ Color Class
 
 An opinionated JavaScript Color class.  This is what the JavaScript language should provide as the de facto `Color` object.
 
-This modules is an alternative to the npm module [color](https://www.npmjs.com/package/color) but with some important differences:
+This module is a more simple alternative to the npm module [color](https://www.npmjs.com/package/color) with some important differences:
 
-- in addition to RGB arrays, also accepts CSS strings as inputs like `new Color('rgba(255,0,0,0.5)')` or `new Color('#ff00ff')`
-- toString() always outputs CSS hex values like `#fff`
+- toString() always returns CSS-compatible color strings like `"#fff"` so the color objects can be used to change CSS style values or when creating strings, eg: `elm.style.color = new Color('azure')`
+- in addition to RGB arrays, also accepts CSS strings as inputs, eg: `new Color('rgba(255,0,0,0.5)')` or `new Color('#ff00ff')`
 - HSL calculations use floating point values between 0.0 and 1.0
 - larger list of [color names](https://dsteinman.github.io/color-class/colors.html)
-- 100% unit test code coverage
+- full test coverage using `npm run test`
 - invalid colors throw errors
 - no CMYK color space support
 - all setter methods are immutable, chainable, and always return a new instance of `Color`
 - [static minified build](https://github.com/dsteinman/color-class/tree/master/dist) available that provides a global `Color` object available in any html file
 - no dependencies
-- small build size (20KB)
+- small build size (20KB or 7KB without color names)
+
+## API
+
+- [https://dsteinman.github.io/color-class/api/](https://dsteinman.github.io/color-class/api/)
 
 ## Install
 
@@ -27,13 +31,31 @@ import Color from 'color-class';
 
 #### Or Use The Static Build
 
+The static build file `color-class.min.js` is included in the [/dist](https://github.com/dsteinman/color-class/tree/master/dist) directory.  A smaller `color-class-no-names.min.js` file is also provided without color names support.
+
 ```
 <script type="text/javascript" src="color-class.min.js"></script>
 ```
 
 ## Usage
 
-Different ways to define `red`:
+```
+new Color( inputValue )
+```
+
+The `inputValue` can be one of:
+
+- a CSS string
+- an array of RGB values (and optionally an alpha channel)
+- an HSL object
+
+The constructor also accepts RGBA values in the form:
+
+```
+new Color( red, green, blue, alpha )
+```
+
+Here are some diifferent ways to define `red`:
 
 ```
 new Color('red');
@@ -49,7 +71,15 @@ new Color({ h: 0, s: 1, l: 0.5 });
 new Color({ h: 0, s: 1, l: 0.5, a: 0.5 }); // 50% transparent
 ```
 
+## Color Names
+
 Any of the colors in the [named color list](https://dsteinman.github.io/color-class/colors.html) can be used as the input value.
+
+The hash of of names and their RGB values can be accessed using:
+
+```
+Color.names
+```
 
 ## Properties
 
@@ -83,11 +113,19 @@ new Color('red').alpha(0.5).toString()
 // returns "rgba(255,0,0,0.5)"
 ```
 
-
-In certain cases `.toString()` is implied and can be omitted;
+In certain cases, such as when applying styles in CSS, using `console.log()`, or when manipulating strings, the `.toString()` is implied and can be omitted;
 
 ```
-document.write( new Color('red') );
+document.body.style.backgroundColor = new Color('red').darken(0.3);
+```
+
+```
+console.log( new Color('red').darken(0.3) );
+```
+
+```
+var borderStyle = "1px solid " + new Color('red').darken(0.3);
+myElement.style.border = borderStyle;
 ```
 
 ### Setter Methods
@@ -95,10 +133,17 @@ document.write( new Color('red') );
 All setter methods are immutable and return a new instance of `Color`.  This means calling a method like `.alpha()` does not modify the object, but returns a new method with that alpha channel applied.  This is useful when making modifications to a base color value but not changing the original color.
 
 ```
-var mycolor = new Color('red');
-console.log( mycolor.toString() ); // '#f00'
-console.log( mycolor.alpha(0.5).toString() ); // 'rgba(255,0,0,0.5)'
-console.log( mycolor.toString() ); // '#f00'
+var red = new Color('red');
+var blue = new Color('blue');
+var darkpurple = red.combine(blue.darken(0.2)).alpha(0.5);
+console.log('red = '+red);
+console.log('blue = '+ blue);
+console.log('darkpurple = '+darkpurple);
+
+// OUTPUT:
+// red = #f00
+// blue = #00f
+// darkpurple = rgba(128,0,102,0.5)
 ```
 
 #### alpha()
@@ -154,7 +199,7 @@ new Color([125,0,0]).desaturate(0.2).toString()
 Adjusts the hue value (0 - 1):
 
 ```
-new Color(255, 255, 0).shiftHue(0.25).toString());
+new Color(255, 255, 0).shiftHue(0.25).toString();
 // returns '#00ff7f'
 ```
 

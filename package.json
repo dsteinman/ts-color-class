@@ -6,6 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive ./test/config.js ./test",
     "test:watch": "NODE_ENV=test nodemon -w . -e js -x mocha --recursive ./test",
+    "api": "./node_modules/.bin/jsdoc color-class.js -d docs/api",
     "build": "webpack"
   },
   "repository": {
@@ -20,6 +21,7 @@
   "homepage": "https://github.com/dsteinman/color-class#readme",
   "devDependencies": {
     "chai": "^4.2.0",
+    "jsdoc": "^3.6.3",
     "mocha": "^7.0.0",
     "webpack-cli": "^3.3.10"
   },

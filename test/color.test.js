@@ -13,6 +13,7 @@ describe('Color class constructor', function() {
 		expect(new Color('red').rgb).to.be.eql([255, 0, 0]);
 		expect(new Color('red 1').rgb).to.be.eql([255, 0, 0]);
 		expect(new Color('tan').rgb).to.be.eql([210, 180, 140]);
+		expect(new Color('transparent').rgb).to.be.eql([0, 0, 0, 0]);
 		expect(new Color('rgb(255,0,0)').rgb).to.be.eql([255, 0, 0]);
 		expect(new Color('rgba(255, 0, 0, 0.5)').rgb).to.be.eql([255,0,0,0.5]);
 		expect(new Color([255,0,0,0.5]).rgb).to.be.eql([255,0,0,0.5]);
@@ -46,6 +47,7 @@ describe('Color class constructor', function() {
 		expect(new Color('#FF0000').toString()).to.be.equal('#f00');
 		expect(new Color('rgb(255,0,0)').toString()).to.be.equal('#f00');
 		expect(new Color('rgba(255, 0, 0, 0.5)').toString()).to.be.equal('rgba(255,0,0,0.5)');
+		expect(new Color('rgba(255, 255, 255, 0)').toString()).to.be.equal('transparent');
 		expect(new Color([255,0,0,0.5]).toString()).to.be.equal('rgba(255,0,0,0.5)');
 		expect(new Color(255,0,0,0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
 		done();
@@ -53,10 +55,10 @@ describe('Color class constructor', function() {
 
 	it('throws Error invalid color string', function(done) {
 		try {
-			new Color('this is not a color string')
+			new Color('this is not a color string');
 		}
 		catch(e) {
-			expect(e.toString()).to.be.equal('Error: invalid color string');
+			expect(e.message).to.be.equal('invalid color string');
 			done();
 		}
 	});
@@ -66,7 +68,7 @@ describe('Color class constructor', function() {
 			new Color(['a',-10,0,1.01]);
 		}
 		catch(e) {
-			expect(e.toString()).to.be.equal('Error: invalid color data');
+			expect(e.message).to.be.equal('invalid color data');
 			done();
 		}
 	});
