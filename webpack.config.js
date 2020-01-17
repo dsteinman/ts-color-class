@@ -1,11 +1,21 @@
 const path = require('path');
 
-module.exports = function(env) {
-	return {
-		entry: './webpack-color-class.js',
-		output: {
-			filename: 'color-class.min.js',
-			path: path.resolve(__dirname, 'dist')
-		}
-	};
+module.exports = {
+	entry: './src/Color.ts',
+	module: {
+		rules: [
+			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
+		],
+	},
+	resolve: {
+		extensions: [ '.tsx', '.ts', '.js' ],
+	},
+	output: {
+		filename: 'bundle.js',
+		path: path.resolve(__dirname, 'dist'),
+	},
 };
