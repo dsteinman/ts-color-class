@@ -67,7 +67,7 @@ console.log( new Color('rgba(255,0,0,0.5)').rgb );
 
 ## Methods
 
-####toString()
+#### toString()
 
 Returns a CSS-compatible 3 or 6 character hex string:
 
@@ -158,7 +158,7 @@ new Color(255, 255, 0).shiftHue(0.25).toString());
 // returns '#00ff7f'
 ```
 
-### combine()
+#### combine()
 
 Combines the color with another.
 
@@ -176,7 +176,7 @@ new Color('black').combine('red', 0.2).toString();
 // returns '#300'
 ```
 
-### tint()
+#### tint()
 
 Adjusts the hue toward another color (0 - 1).
 
@@ -189,7 +189,7 @@ new Color('red').tint([0,0,1], 0.5).toString();
 // also returns '#f0f'
 ```
 
-### hue()
+#### hue()
 
 Sets the hue value (0 - 1):
 
@@ -198,7 +198,7 @@ new Color('red').hue(0.23).toString()
 // returns '#9eff00'
 ```
 
-### saturation()
+#### saturation()
 
 Sets the saturation value (0 - 1):
 
@@ -209,7 +209,7 @@ new Color(100,50,50).saturation(1).toString();
 // returns '#960000' (dark red)
 ```
 
-### lightness()
+#### lightness()
 
 Sets the lightness value (0 - 1);
 
@@ -218,7 +218,7 @@ new Color('#cdc8b1').lightness(0.5).toString()
 // returns '#9b9164'
 ```
 
-### invert()
+#### invert()
 
 Inverts the color:
 
@@ -227,7 +227,7 @@ new Color('#fff').invert().toString()
 // returns '#000'
 ```
 
-### hsl()
+#### hsl()
 
 Sets the hue, saturation, and lightess.  Provide `null` to keep the existing value.
 
@@ -236,7 +236,7 @@ new Color('#fa8072').hsl(null,0.5,0.5).toString()
 // returns '#bf4d40' // hue is the same
 ```
 
-### red()
+#### red()
 
 Sets the red value (0 - 255):
 
@@ -245,7 +245,7 @@ new Color('black').red(255).toString()
 // returns '#f00'
 ```
 
-### green()
+#### green()
 
 Sets the green value (0 - 255):
 
@@ -254,7 +254,7 @@ new Color('black').green(255).toString()
 // returns '#0f0'
 ```
 
-### blue()
+#### blue()
 
 Sets the blue value (0 - 255):
 
@@ -265,38 +265,38 @@ new Color('black').green(255).toString()
 
 ### Getter Methods
 
-### getAlpha()
+#### getAlpha()
 
 Returns the alpha channel value (0 - 1).
 
-### getHex
+#### getHex
 
 Returns the hexidecimal css value (ignores alpha channel value).
 
-### getRed
+#### getRed
 
 Returns the red value (0 - 255).
 
-### getGreen
+#### getGreen
 
 Returns the green value (0 - 255).
 
-### getBlue
+#### getBlue
 
 Returns the blue value (0 - 255).
 
-### getHSL
+#### getHSL
 
 Returns the hue, saturation, and lightness values as an array.
 
-### getHue
+#### getHue
 
 Returns the hue value (0 - 1);
 
-### getSaturation
+#### getSaturation
 
 Returns the saturation value (0 - 1);
 
-### getLightness
+#### getLightness
 
 Returns the lightness value (0 - 1);
