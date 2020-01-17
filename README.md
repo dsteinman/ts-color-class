@@ -75,24 +75,10 @@ new Color({ h: 0, s: 1, l: 0.5, a: 0.5 }); // 50% transparent
 
 Any of the colors in the [named color list](https://dsteinman.github.io/color-class/colors.html) can be used as the input value.
 
-The hash of of names and their RGB values can be accessed using:
+The hash of names and their RGB values can be accessed using:
 
 ```
 Color.names
-```
-
-## Properties
-
-The Color Class has only one property `.rgb` containing an array of the red, green, blue color values (0 - 255) and the alpha channel value (0.0 - 1.0):
-
-```
-console.log( new Color('red').rgb );
-// returns [255,0,0]
-```
-
-```
-console.log( new Color('rgba(255,0,0,0.5)').rgb );
-// returns [255,0,0,0.5]
 ```
 
 ## Methods
@@ -309,6 +295,22 @@ new Color('black').green(255).toString()
 ```
 
 ### Getter Methods
+
+#### getRGB()
+
+Returns the red, green, blue color values as an array:
+
+```
+console.log( new Color('red').getRGB() );
+// returns [255,0,0]
+```
+
+If an alpha channel is applied it is also returned in the array:
+
+```
+console.log( new Color('rgba(255,0,0,0.5)').rgb );
+// returns [255,0,0,0.5]
+```
 
 #### getAlpha()
 

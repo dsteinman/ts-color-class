@@ -48,16 +48,7 @@ function isColor(c) {
 var Color = function () {
 	var a = arguments[0];
 	if (isColor(a)) {
-		/**
-		 * The the array containing red, green, blue color values, and the alpha channel value
-		 *
-		 * @property rgb
-		 *
-		 * @example
-		 * console.log( new Color('red').rgb ); // outputs [255,0,0]
-		 *
-		 */
-		this.rgb = a.rgb.slice();
+		this.rgb = a.getRGB();
 	}
 	else if (typeof a === 'object' && 'h' in a && 's' in a && 'l' in a) {
 		this.rgb = colorlib.hsl2rgb([a.h, a.s, a.l]);
@@ -521,6 +512,22 @@ Color.prototype = {
 	 */
 	getLightness: function () {
 		return this.getHSL()[2];
+	},
+	
+	/**
+	 * Return the red, green, blue color values with the alpha channel as an array
+	 *
+	 * @method getRGB
+	 * @memberof Color
+	 * @return {Array} rgba the array of color values
+	 * @instance
+	 *
+	 * @example
+	 * new Color('red).getRGB();   // returns [255,0,0]
+	 *
+	 */
+	getRGB: function () {
+		return this.rgb.slice();
 	}
 };
 

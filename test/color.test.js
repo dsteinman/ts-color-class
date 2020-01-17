@@ -4,20 +4,20 @@ const expect = chai.expect;
 const Color = require('../color-class');
 
 describe('Color class constructor', function() {
-	it('converts the supplied color into a .rgb array', function(done) {
-		expect(new Color([255, 0, 0]).rgb).to.eql([255, 0, 0]);
-		expect(new Color(255, 0, 0).rgb).to.eql([255, 0, 0]);
-		expect(new Color(new Color(255, 0, 0)).rgb).to.eql([255, 0, 0]);
-		expect(new Color('#FF0000').rgb).to.be.eql([255, 0, 0]);
-		expect(new Color('#ff0000').rgb).to.be.eql([255, 0, 0]);
-		expect(new Color('red').rgb).to.be.eql([255, 0, 0]);
-		expect(new Color('red 1').rgb).to.be.eql([255, 0, 0]);
-		expect(new Color('tan').rgb).to.be.eql([210, 180, 140]);
-		expect(new Color('transparent').rgb).to.be.eql([0, 0, 0, 0]);
-		expect(new Color('rgb(255,0,0)').rgb).to.be.eql([255, 0, 0]);
-		expect(new Color('rgba(255, 0, 0, 0.5)').rgb).to.be.eql([255,0,0,0.5]);
-		expect(new Color([255,0,0,0.5]).rgb).to.be.eql([255,0,0,0.5]);
-		expect(new Color(255,0,0,0.5).rgb).to.be.eql([255,0,0,0.5]);
+	it('accepts strings, rgb arrays, or hsl objects', function(done) {
+		expect(new Color([255, 0, 0]).getRGB()).to.eql([255, 0, 0]);
+		expect(new Color(255, 0, 0).getRGB()).to.eql([255, 0, 0]);
+		expect(new Color(new Color(255, 0, 0)).getRGB()).to.eql([255, 0, 0]);
+		expect(new Color('#FF0000').getRGB()).to.be.eql([255, 0, 0]);
+		expect(new Color('#ff0000').getRGB()).to.be.eql([255, 0, 0]);
+		expect(new Color('red').getRGB()).to.be.eql([255, 0, 0]);
+		expect(new Color('red 1').getRGB()).to.be.eql([255, 0, 0]);
+		expect(new Color('tan').getRGB()).to.be.eql([210, 180, 140]);
+		expect(new Color('transparent').getRGB()).to.be.eql([0, 0, 0, 0]);
+		expect(new Color('rgb(255,0,0)').getRGB()).to.be.eql([255, 0, 0]);
+		expect(new Color('rgba(255, 0, 0, 0.5)').getRGB()).to.be.eql([255,0,0,0.5]);
+		expect(new Color([255,0,0,0.5]).getRGB()).to.be.eql([255,0,0,0.5]);
+		expect(new Color(255,0,0,0.5).getRGB()).to.be.eql([255,0,0,0.5]);
 
 		expect(new Color({
 			h: 0,
@@ -36,7 +36,7 @@ describe('Color class constructor', function() {
 			h: 0.5,
 			s: 0.5,
 			l: 0.5
-		}).rgb).to.be.eql([64,191,191]);
+		}).getRGB()).to.be.eql([64,191,191]);
 
 		done();
 	});
@@ -172,17 +172,17 @@ describe('.darken()', function() {
 
 describe('set colors', function() {
 	it('also is used by .red()', function(done) {
-		expect(new Color('black').red(255).rgb).to.be.eql([255,0,0]);
+		expect(new Color('black').red(255).getRGB()).to.be.eql([255,0,0]);
 		done();
 	});
 
 	it('also is used by .green()', function(done) {
-		expect(new Color('black').green(255).rgb).to.be.eql([0,255,0]);
+		expect(new Color('black').green(255).getRGB()).to.be.eql([0,255,0]);
 		done();
 	});
 
 	it('also is used by .blue()', function(done) {
-		expect(new Color('black').blue(255).rgb).to.be.eql([0,0,255]);
+		expect(new Color('black').blue(255).getRGB()).to.be.eql([0,0,255]);
 		done();
 	});
 });
@@ -283,6 +283,12 @@ describe('Getters', function() {
 
 	it('.getHex()', function(done) {
 		expect(new Color('rgba(255,0,0,0.5)').getHex()).to.be.equal('#f00');
+		done();
+	});
+	
+	it('.getRGB()', function(done) {
+		expect(new Color('rgb(255,0,0)').getRGB()).to.be.eql([255,0,0]);
+		expect(new Color('rgba(255,0,0,0.5)').getRGB()).to.be.eql([255,0,0,0.5]);
 		done();
 	});
 });
