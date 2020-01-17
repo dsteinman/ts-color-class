@@ -269,34 +269,34 @@ new Color('black').green(255).toString()
 
 Returns the alpha channel value (0 - 1).
 
-#### getHex
+#### getHex()
 
 Returns the hexidecimal css value (ignores alpha channel value).
 
-#### getRed
+#### getRed()
 
 Returns the red value (0 - 255).
 
-#### getGreen
+#### getGreen()
 
 Returns the green value (0 - 255).
 
-#### getBlue
+#### getBlue()
 
 Returns the blue value (0 - 255).
 
-#### getHSL
+#### getHSL()
 
 Returns the hue, saturation, and lightness values as an array.
 
-#### getHue
+#### getHue()
 
 Returns the hue value (0 - 1);
 
-#### getSaturation
+#### getSaturation()
 
 Returns the saturation value (0 - 1);
 
-#### getLightness
+#### getLightness()
 
 Returns the lightness value (0 - 1);
