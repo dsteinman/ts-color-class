@@ -4,7 +4,6 @@ import {
     isColorValue,
     isAlphaValue,
     isHSL,
-    isHSLA,
     parseColorString,
     rgb2hex,
     hsl2rgb,
@@ -18,6 +17,52 @@ import {HSL} from './interfaces';
 
 import colorNames from './color-names';
 
+
+/** @class Color
+ * Color class accepts a CSS color string, rgb, hsl data as the input, manipulate the color, and returns a CSS-compatible color string.
+ * @constructor
+ *
+ * @example
+ * new Color('red')  // named CSS colors
+ *
+ * @example
+ * new Color('red', 0.5)  // named CSS colors and transparency
+ *
+ * @example
+ * new Color('#f00')  // hex 3 characters
+ *
+ * @example
+ * new Color('#e2b644')  // hex 6 characters
+ *
+ * @example
+ * new Color('rgb(255, 0, 100)')  // rgb()
+ *
+ * @example
+ * new Color('rgba(255, 0, 100, 0.5)')  // rgba()
+ *
+ * @example
+ * new Color('rgba(255, 0, 100, 0.5)', 0.1)  // 0.1 overrides alpha from rgba
+ *
+ * @example
+ * new Color([255,0,0])  // rgb array
+ *
+ * @example
+ * new Color([255,0,0], 0.5)  // rgb and transparency
+ *
+ * @example
+ * new Color({  // hsl object
+ *     h: 0.2,
+ *     s: 0.5,
+ *     l: 1
+ * })
+ *
+ * @example
+ * new Color({  // hsl object and transparency
+ *     h: 0.5,
+ *     s: 1,
+ *     l: 1
+ * }, 0.5)
+ */
 class Color {
     private rgb: number[];
     private hsl: HSL;
@@ -52,25 +97,24 @@ class Color {
             let rgba = parseColorString(any);
             if (rgba) {
                 this.rgb = rgba.slice(0, 3);
-                if (rgba.length === 4) {
+                if (arguments.length === 2 && isAlphaValue(arguments[1])) {
+                    this.a = arguments[1];
+                }
+                else if (rgba.length === 4) {
                     this.a = rgba[3];
-                } else {
-                    if (arguments.length === 2 && isAlphaValue(arguments[1])) {
-                        this.a = arguments[1];
-                    } else {
-                        this.a = 1;
-                    }
+                }
+                else {
+                    this.a = 1;
                 }
             } else throw Error('invalid color');
         } else if (typeof any === 'object') {
             if (any.length > 0) {
-                if (any.length === 4 && isRGBAArray(any)) {
-                    this.rgb = any.slice(0, 3);
-                    this.a = any[3];
-                } else if (any.length === 3 && isRGBArray(any)) {
+                if (any.length === 3 && isRGBArray(any)) {
                     this.rgb = any.slice(0, 3);
                     if (arguments.length === 2) {
-                        this.a = arguments[1];
+                        if (isAlphaValue(arguments[1])) {
+                            this.a = arguments[1];
+                        } else throw new Error('invalid alpha value');
                     } else {
                         this.a = 1;
                     }
@@ -88,23 +132,18 @@ class Color {
                     if (arguments.length === 2) {
                         if (isAlphaValue(arguments[1])) {
                             this.a = arguments[1];
-                        } else throw Error('invalid color');
+                        } else throw new Error('invalid alpha value');
                     } else {
                         this.a = any.a;
                     }
-                } else if (isHSLA(any)) {
-                    this.hsl = {
-                        h: any.h,
-                        s: any.s,
-                        l: any.l
-                    };
-                    this.a = any.a;
                 } else if (isHSL(any)) {
                     this.hsl = {
                         ...any
                     };
                     if (arguments.length === 2) {
-                        this.a = arguments[1];
+                        if (isAlphaValue(arguments[1])) {
+                            this.a = arguments[1];
+                        } else throw new Error('invalid alpha value');
                     } else {
                         this.a = 1;
                     }

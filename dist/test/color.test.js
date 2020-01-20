@@ -15,7 +15,6 @@ var expect = chai.expect;
 // const assert = chai.assert;
 // const should = chai.should();
 var mocha_1 = require("mocha");
-// import Color from '../dist/src/Color';
 var Color_1 = __importDefault(require("../Color"));
 mocha_1.describe('Color class constructor', function () {
     it('accepts strings', function (done) {
@@ -31,11 +30,11 @@ mocha_1.describe('Color class constructor', function () {
         expect(new Color_1.default('rgb(255,0,0)').getRGB()).to.be.eql([255, 0, 0]);
         expect(new Color_1.default('rgba(255, 0, 0, 0.5)').getRGB()).to.be.eql([255, 0, 0]);
         expect(new Color_1.default('rgba(255, 0, 0, 0.5)').getAlpha()).to.be.equal(0.5);
+        expect(new Color_1.default('rgba(255, 0, 0, 0.5)', 0.1).getAlpha()).to.be.equal(0.1);
         done();
     });
     it('accepts rgb arrays', function (done) {
         expect(new Color_1.default([255, 0, 0]).getRGB()).to.eql([255, 0, 0]);
-        expect(new Color_1.default([255, 0, 0, 0.5]).toString()).to.equal('rgba(255,0,0,0.5)');
         expect(new Color_1.default([255, 0, 0], 0.5).toString()).to.equal('rgba(255,0,0,0.5)');
         expect(new Color_1.default(255, 0, 0).getRGB()).to.eql([255, 0, 0]);
         expect(new Color_1.default(255, 0, 0, 0.5).toString()).to.equal('rgba(255,0,0,0.5)');
@@ -47,12 +46,6 @@ mocha_1.describe('Color class constructor', function () {
             s: 1,
             l: 0.5
         }).toString()).to.be.eql('#f00');
-        expect(new Color_1.default({
-            h: 0,
-            s: 1,
-            l: 0.5,
-            a: 0.5
-        }).toString()).to.be.equal('rgba(255,0,0,0.5)');
         expect(new Color_1.default({
             h: 0,
             s: 1,
@@ -78,7 +71,7 @@ mocha_1.describe('Color class constructor', function () {
         expect(new Color_1.default('rgb(255,0,0)').toString()).to.be.equal('#f00');
         expect(new Color_1.default('rgba(255, 0, 0, 0.5)').toString()).to.be.equal('rgba(255,0,0,0.5)');
         expect(new Color_1.default('rgba(255, 255, 255, 0)').toString()).to.be.equal('transparent');
-        expect(new Color_1.default([255, 0, 0, 0.5]).toString()).to.be.equal('rgba(255,0,0,0.5)');
+        expect(new Color_1.default([255, 0, 0], 0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
         expect(new Color_1.default(255, 0, 0, 0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
         done();
     });
@@ -114,7 +107,7 @@ mocha_1.describe('.alpha()', function () {
     it('converts to rgba()', function (done) {
         expect(new Color_1.default('red').alpha(0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
         expect(new Color_1.default('red').alpha(0).toString()).to.be.equal('transparent');
-        expect(new Color_1.default([255, 0, 0, 0.5]).alpha(1).toString()).to.be.equal('#f00');
+        expect(new Color_1.default([255, 0, 0], 0.5).alpha(1).toString()).to.be.equal('#f00');
         done();
     });
     it('alpha does not modify existing color', function (done) {

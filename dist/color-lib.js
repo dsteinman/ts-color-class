@@ -91,14 +91,6 @@ function getColorName(colorString) {
     }
 }
 exports.getColorName = getColorName;
-function isHSLA(hsla) {
-    return (typeof hsla === 'object' &&
-        'h' in hsla && isAlphaValue(hsla.h) &&
-        's' in hsla && isAlphaValue(hsla.s) &&
-        'l' in hsla && isAlphaValue(hsla.l) &&
-        'a' in hsla && isAlphaValue(hsla.a));
-}
-exports.isHSLA = isHSLA;
 function isHSL(hsla) {
     return (typeof hsla === 'object' &&
         'h' in hsla && isAlphaValue(hsla.h) &&

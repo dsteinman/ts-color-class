@@ -93,15 +93,6 @@ export function getColorName(colorString: string): number[] {
     }
 }
 
-export function isHSLA(hsla: any): boolean {
-    return (typeof hsla === 'object' &&
-        'h' in hsla && isAlphaValue(hsla.h) &&
-        's' in hsla && isAlphaValue(hsla.s) &&
-        'l' in hsla && isAlphaValue(hsla.l) &&
-        'a' in hsla && isAlphaValue(hsla.a)
-    );
-}
-
 export function isHSL(hsla: any): boolean {
     return (typeof hsla === 'object' &&
         'h' in hsla && isAlphaValue(hsla.h) &&

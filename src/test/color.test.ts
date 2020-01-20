@@ -30,11 +30,11 @@ describe('Color class constructor', function() {
 		expect(new Color('rgb(255,0,0)').getRGB()).to.be.eql([255, 0, 0]);
 		expect(new Color('rgba(255, 0, 0, 0.5)').getRGB()).to.be.eql([255,0,0]);
 		expect(new Color('rgba(255, 0, 0, 0.5)').getAlpha()).to.be.equal(0.5);
+		expect(new Color('rgba(255, 0, 0, 0.5)', 0.1).getAlpha()).to.be.equal(0.1);
 		done();
 	});
 	it('accepts rgb arrays', function(done) {
 		expect(new Color([255, 0, 0]).getRGB()).to.eql([255, 0, 0]);
-		expect(new Color([255, 0, 0, 0.5]).toString()).to.equal('rgba(255,0,0,0.5)');
 		expect(new Color([255, 0, 0], 0.5).toString()).to.equal('rgba(255,0,0,0.5)');
 		expect(new Color(255, 0, 0).getRGB()).to.eql([255, 0, 0]);
 		expect(new Color(255, 0, 0, 0.5).toString()).to.equal('rgba(255,0,0,0.5)');
@@ -46,13 +46,6 @@ describe('Color class constructor', function() {
 			s: 1,
 			l: 0.5
 		}).toString()).to.be.eql('#f00');
-
-		expect(new Color({
-			h: 0,
-			s: 1,
-			l: 0.5,
-			a: 0.5
-		}).toString()).to.be.equal('rgba(255,0,0,0.5)');
 		
 		expect(new Color({
 			h: 0,
@@ -82,7 +75,7 @@ describe('Color class constructor', function() {
 		expect(new Color('rgb(255,0,0)').toString()).to.be.equal('#f00');
 		expect(new Color('rgba(255, 0, 0, 0.5)').toString()).to.be.equal('rgba(255,0,0,0.5)');
 		expect(new Color('rgba(255, 255, 255, 0)').toString()).to.be.equal('transparent');
-		expect(new Color([255,0,0,0.5]).toString()).to.be.equal('rgba(255,0,0,0.5)');
+		expect(new Color([255,0,0],0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
 		expect(new Color(255,0,0,0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
 		done();
 	});
@@ -122,7 +115,7 @@ describe('.alpha()', function() {
 	it('converts to rgba()', function(done) {
 		expect(new Color('red').alpha(0.5).toString()).to.be.equal('rgba(255,0,0,0.5)');
 		expect(new Color('red').alpha(0).toString()).to.be.equal('transparent');
-		expect(new Color([255,0,0,0.5]).alpha(1).toString()).to.be.equal('#f00');
+		expect(new Color([255,0,0],0.5).alpha(1).toString()).to.be.equal('#f00');
 		done();
 	});
 	it('alpha does not modify existing color', function(done) {
