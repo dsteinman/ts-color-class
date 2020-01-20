@@ -327,7 +327,8 @@ Returns the blue value (0 - 255).
 Returns the hue, saturation, and lightness values as an object literal.
 
 ```
-{h: 0.5, s: 1, l: 0.5}`.
+new Color('tan').getHSL()
+// returns { h: 0.09523809523809527, s: 0.4374999999999999, l: 0.6862745098039216 }
 ```
 
 #### getHue()
