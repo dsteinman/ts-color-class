@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var color_names_1 = require("./color-names");
+var color_names_1 = __importDefault(require("./color-names"));
 function isColorValue(value) {
     return value >= 0 && value <= 255;
 }

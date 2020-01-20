@@ -2,7 +2,7 @@
   "name": "js-color-class",
   "version": "0.9.0",
   "description": "JavaScript Color class that manipulates colors and converts them to CSS-compatible hex or rgba strings",
-  "main": "dist/bundle.js",
+  "main": "dist/Color.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive ./dist/test",
     "test:watch": "NODE_ENV=test nodemon -w . -e js -x mocha --recursive ./dist/test",
@@ -27,10 +27,8 @@
   "homepage": "https://github.com/dsteinman/color-class#readme",
   "devDependencies": {
     "@types/chai": "^4.2.7",
-    "@types/core-js": "^2.5.2",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
-    "jsdoc": "^3.6.3",
     "mocha": "^7.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",

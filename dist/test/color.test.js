@@ -1,12 +1,22 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var chai = require("chai");
+var chai = __importStar(require("chai"));
 var expect = chai.expect;
 // const assert = chai.assert;
 // const should = chai.should();
 var mocha_1 = require("mocha");
 // import Color from '../dist/src/Color';
-var Color_1 = require("../Color");
+var Color_1 = __importDefault(require("../Color"));
 mocha_1.describe('Color class constructor', function () {
     it('accepts strings', function (done) {
         expect(new Color_1.default('#f00').getRGB()).to.be.eql([255, 0, 0]);

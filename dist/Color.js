@@ -10,9 +10,11 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var color_lib_1 = require("./color-lib");
-var color_names_1 = require("./color-names");
+var color_names_1 = __importDefault(require("./color-names"));
 var Color = /** @class */ (function () {
     function Color(any, green, blue, alpha) {
         if (arguments.length === 0) {
@@ -336,4 +338,4 @@ var Color = /** @class */ (function () {
     };
     return Color;
 }());
-exports.default = Color;
+module.exports = Color;

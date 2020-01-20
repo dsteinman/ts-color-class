@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-var Color = require('../dist/index').default;
+const Color = require('../dist/Color');
 
 describe('Color class constructor', function() {
 	it('accepts strings', function(done) {

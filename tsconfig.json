@@ -13,6 +13,7 @@
 //    "module": "es6",
     "moduleResolution": "node",
     "allowJs": true,
+    "esModuleInterop": true,
     "typeRoots": [
       "../node_modules/@types"
     ],
