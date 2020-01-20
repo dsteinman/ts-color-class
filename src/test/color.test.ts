@@ -14,7 +14,6 @@ import {
 	// xit as importedXit
 } from 'mocha';
 
-// import Color from '../dist/src/Color';
 import Color from '../Color';
 
 describe('Color class constructor', function() {
@@ -66,6 +65,7 @@ describe('Color class constructor', function() {
 			s: 0.5,
 			l: 0.5
 		}).getRGB()).to.be.eql([64,191,191]);
+
 		done();
 	});
 	it('accepts color class', function(done) {

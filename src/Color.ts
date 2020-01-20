@@ -24,7 +24,6 @@ class Color {
     private readonly a: number;
 
     constructor();
-    // constructor(any: Color);
     constructor(any: Color);
     constructor(any: string);
     constructor(any: number[]);
