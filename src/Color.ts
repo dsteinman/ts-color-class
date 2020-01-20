@@ -24,9 +24,19 @@ class Color {
     private readonly a: number;
 
     constructor();
+    // constructor(any: Color);
+    constructor(any: Color);
+    constructor(any: string);
+    constructor(any: number[]);
+    constructor(any: HSL);
     constructor(any: any);
+    constructor(any: Color, alpha: number);
+    constructor(any: string, alpha: number);
+    constructor(any: number[], alpha: number);
+    constructor(any: HSL, alpha: number);
     constructor(any: any, alpha: number);
     constructor(any: number, green: number, blue: number);
+    constructor(any: number, green: number, blue: number, alpha: number);
     constructor(any?: any, green?: number, blue?: number, alpha?: number) {
         if (arguments.length === 0) {
             this.rgb = [0, 0, 0];
@@ -290,16 +300,18 @@ class Color {
         return this.lighten(-amount);
     }
 
-    combine(colorValue: any, percentage: number | undefined): Color {
-        let color;
-        if (colorValue instanceof Color) {
-            color = colorValue;
+    combine(colorValue: any, percentage: number ): Color {
+        if (isAlphaValue(percentage)) {
+            let color;
+            if (colorValue instanceof Color) {
+                color = colorValue;
+            } else {
+                color = new Color(colorValue);
+            }
+            let newrgb = combine(this._getRGB(), color._getRGB(), percentage);
+            return new Color(newrgb, this.a);
         }
-        else {
-            color = new Color(colorValue);
-        }
-        let newrgb = combine(this._getRGB(), color._getRGB(), percentage || 0.5);
-        return new Color(newrgb, this.a);
+        else throw new Error('invalid combine percentage');
     }
 
     invert(): Color {

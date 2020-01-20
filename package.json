@@ -4,13 +4,16 @@
   "description": "JavaScript Color class that manipulates colors and converts them to CSS-compatible hex or rgba strings",
   "main": "dist/bundle.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --recursive ./test/config.js ./test",
-    "test:watch": "NODE_ENV=test nodemon -w . -e js -x mocha --recursive ./test",
+    "test": "NODE_ENV=test mocha --recursive ./dist/test",
+    "test:watch": "NODE_ENV=test nodemon -w . -e js -x mocha --recursive ./dist/test",
+    "test:es5": "NODE_ENV=test mocha --recursive ./test/config.js ./test",
+    "test:es5:watch": "NODE_ENV=test nodemon -w . -e js -x mocha --recursive ./test",
     "api": "./node_modules/.bin/jsdoc color-class.js -d docs/api",
     "build": "webpack",
     "build:watch": "NODE_ENV=test nodemon -w src -e ts -x webpack",
-    "ts": "npx tsc src/Color.ts",
-    "ts:watch": "NODE_ENV=test nodemon -w src -e ts -x npx tsc src/Color.ts"
+    "ts": "npx tsc",
+    "ts:watch": "NODE_ENV=test nodemon -w src -e ts -x npx tsc",
+    "ts:watchx": "NODE_ENV=test nodemon -w src -e ts -x npx tsc src/Color.ts"
   },
   "repository": {
     "type": "git",
@@ -23,6 +26,9 @@
   },
   "homepage": "https://github.com/dsteinman/color-class#readme",
   "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/core-js": "^2.5.2",
+    "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "jsdoc": "^3.6.3",
     "mocha": "^7.0.0",

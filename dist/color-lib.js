@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var color_names_1 = require("./color-names");
 function isColorValue(value) {
     return value >= 0 && value <= 255;
@@ -75,15 +75,15 @@ function parseColorString(colorString) {
 exports.parseColorString = parseColorString;
 function getColorName(colorString) {
     var colStr = colorString.toLowerCase();
-    if (colStr in color_names_1["default"]) {
-        return color_names_1["default"][colStr];
+    if (colStr in color_names_1.default) {
+        return color_names_1.default[colStr];
     }
     if (/ 1$/.test(colStr)) {
         // some color names had a 1 (eg. "blue 1') but none without the 1
         // the 1's were removed from colorNames, and this code was added to support either case
         var noOne = colStr.replace(/ 1$/, '');
-        if (noOne in color_names_1["default"]) {
-            return color_names_1["default"][noOne];
+        if (noOne in color_names_1.default) {
+            return color_names_1.default[noOne];
         }
     }
 }

@@ -10,7 +10,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var color_lib_1 = require("./color-lib");
 var color_names_1 = require("./color-names");
 var Color = /** @class */ (function () {
@@ -195,7 +195,7 @@ var Color = /** @class */ (function () {
             return new Color({
                 h: hue,
                 s: hsl.s,
-                l: hsl.l
+                l: hsl.l,
             }, this.a);
         }
         else
@@ -218,7 +218,7 @@ var Color = /** @class */ (function () {
         return new Color({
             h: newHue,
             s: hsl.s,
-            l: hsl.l
+            l: hsl.l,
         }, this.a);
     };
     Color.prototype.saturation = function (saturation) {
@@ -227,7 +227,7 @@ var Color = /** @class */ (function () {
             return new Color({
                 h: hsl.h,
                 s: saturation,
-                l: hsl.l
+                l: hsl.l,
             }, this.a);
         }
         else
@@ -259,7 +259,7 @@ var Color = /** @class */ (function () {
             return new Color({
                 h: hsl.h,
                 s: hsl.s,
-                l: lightness
+                l: lightness,
             }, this.a);
         }
     };
@@ -284,15 +284,19 @@ var Color = /** @class */ (function () {
         return this.lighten(-amount);
     };
     Color.prototype.combine = function (colorValue, percentage) {
-        var color;
-        if (colorValue instanceof Color) {
-            color = colorValue;
+        if (color_lib_1.isAlphaValue(percentage)) {
+            var color = void 0;
+            if (colorValue instanceof Color) {
+                color = colorValue;
+            }
+            else {
+                color = new Color(colorValue);
+            }
+            var newrgb = color_lib_1.combine(this._getRGB(), color._getRGB(), percentage);
+            return new Color(newrgb, this.a);
         }
-        else {
-            color = new Color(colorValue);
-        }
-        var newrgb = color_lib_1.combine(this._getRGB(), color._getRGB(), percentage || 0.5);
-        return new Color(newrgb, this.a);
+        else
+            throw new Error('invalid combine percentage');
     };
     Color.prototype.invert = function () {
         return new Color(color_lib_1.invert(this._getRGB()), this.a);
@@ -328,8 +332,8 @@ var Color = /** @class */ (function () {
         }
     };
     Color.getNames = function () {
-        return color_names_1["default"];
+        return color_names_1.default;
     };
     return Color;
 }());
-exports["default"] = Color;
+exports.default = Color;

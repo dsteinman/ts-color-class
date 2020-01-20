@@ -1,7 +1,7 @@
 "use strict";
 // This is a slightly modified version of this list:
 //   https://www.color-hex.com/color-names.html
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var colorNames = {
     "alice blue": [240, 248, 255],
     "antique white": [250, 235, 215],
@@ -510,4 +510,4 @@ var colorNames = {
     "yellow 4": [139, 139, 0],
     "yellow green": [154, 205, 50]
 };
-exports["default"] = colorNames;
+exports.default = colorNames;

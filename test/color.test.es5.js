@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-var Color = require('../src/Color.js').default;
+var Color = require('../dist/index').default;
 
 describe('Color class constructor', function() {
 	it('accepts strings', function(done) {
@@ -214,8 +214,8 @@ describe('set colors', function() {
 
 describe('.combine', function() {
 	it('combines colors', function(done) {
-		expect(new Color('black').combine(new Color('red')).toString()).to.be.equal('#800000');
-		expect(new Color('black').combine('red').toString()).to.be.equal('#800000');
+		expect(new Color('black').combine(new Color('red'), 0.5).toString()).to.be.equal('#800000');
+		expect(new Color('black').combine('red', 0.5).toString()).to.be.equal('#800000');
 		expect(new Color('black').combine('red', 0.2).toString()).to.be.equal('#300');
 		expect(new Color('red').combine('#00f',0.7).toString()).to.be.equal('#4d00b3');
 		expect(new Color('red').combine([0,0,255], 0.5).toString()).to.be.equal('#800080');
