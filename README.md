@@ -1,21 +1,21 @@
-JavaScript Color Class
+TypeScript Color Class
 -----------
 
-An opinionated JavaScript Color class.  This is what the JavaScript language should provide as the de facto `Color` object.
+An opinionated TypeScript/JavaScript Color class.  This is what the JavaScript language should provide as the de facto `Color` object.
 
-This module is a more simple alternative to the npm module [color](https://www.npmjs.com/package/color) with some important differences:
+This module is a more simple alternative to the npm modules [color](https://www.npmjs.com/package/color) and [color-js](https://www.npmjs.com/package/color-js) with some important differences:
 
+- written in TypeScript, exports an ES5 module, and ES4/legacy static build
 - toString() always returns CSS-compatible color strings like `"#fff"` so the color objects can be used to change CSS style values or when creating strings, eg: `elm.style.color = new Color('azure')`
 - in addition to RGB arrays, also accepts CSS strings as inputs, eg: `new Color('rgba(255,0,0,0.5)')` or `new Color('#ff00ff')`
 - HSL calculations use floating point values between 0.0 and 1.0
 - larger list of [color names](https://dsteinman.github.io/color-class/colors.html)
-- full test coverage using `npm run test`
-- invalid colors throw errors
-- no CMYK color space support
+- full test coverage using `npm run test` and for ES5 use `npm run test:es5`
+- invalid constructor or methods throw errors
 - all setter methods are immutable, chainable, and always return a new instance of `Color`
-- [static minified build](https://github.com/dsteinman/color-class/tree/master/dist) available that provides a global `Color` object available in any html file
+- the [static minified build](https://github.com/dsteinman/color-class/tree/master/build) provides a global `Color` object available in any html file
 - no dependencies
-- small build size (20KB or 7KB without color names)
+- small build size (22KB)
 
 ## Documentation
 
@@ -26,12 +26,18 @@ This module is a more simple alternative to the npm module [color](https://www.n
 #### Use NPM Module
 
 ```
-import Color from 'js-color-class';
+import Color from 'ts-color-class';
 ```
 
-#### Or Use The Static Build
+#### Or use commonjs import syntax: 
 
-The static build file `color-class.min.js` is included in the [/dist](https://github.com/dsteinman/color-class/tree/master/dist) directory.  A smaller `color-class-no-names.min.js` file is also provided without color names support.
+```
+var Color = require('ts-color-class');
+```
+
+#### Or use the static build
+
+The static build file `color-class.min.js` is included in the [/build](https://github.com/dsteinman/color-class/tree/master/build) directory.
 
 ```
 <script type="text/javascript" src="color-class.min.js"></script>
@@ -61,14 +67,15 @@ Here are some diifferent ways to define `red`:
 new Color('red');
 new Color('#f00');
 new Color('#ff0000');
+new Color('red', 0.5); // 50% transparent
 new Color([255, 0, 0]);
-new Color([255, 0, 0, 0.5]); // 50% transparent
+new Color([255, 0, 0], 0.5); // 50% transparent
 new Color(255, 0, 0);
 new Color(255, 0, 0, 0.5); // 50% transparent
 new Color('rgb(255, 0, 0)');
 new Color('rgba(255, 0, 0, 0.5)'); // 50% transparent
 new Color({ h: 0, s: 1, l: 0.5 });
-new Color({ h: 0, s: 1, l: 0.5, a: 0.5 }); // 50% transparent
+new Color({ h: 0, s: 1, l: 0.5 }, 0.5); // 50% transparent
 ```
 
 ## Color Names
@@ -258,15 +265,6 @@ new Color('#fff').invert().toString()
 // returns '#000'
 ```
 
-#### hsl()
-
-Sets the hue, saturation, and lightess.  Provide `null` to keep the existing value.
-
-```
-new Color('#fa8072').hsl(null,0.5,0.5).toString()
-// returns '#bf4d40' // hue is the same
-```
-
 #### red()
 
 Sets the red value (0 - 255):
@@ -305,13 +303,6 @@ console.log( new Color('red').getRGB() );
 // returns [255,0,0]
 ```
 
-If an alpha channel is applied it is also returned in the array:
-
-```
-console.log( new Color('rgba(255,0,0,0.5)').rgb );
-// returns [255,0,0,0.5]
-```
-
 #### getAlpha()
 
 Returns the alpha channel value (0 - 1).
@@ -334,7 +325,11 @@ Returns the blue value (0 - 255).
 
 #### getHSL()
 
-Returns the hue, saturation, and lightness values as an array.
+Returns the hue, saturation, and lightness values as an object literal.
+
+```
+{h: 0.5, s: 1, l: 0.5}`.
+```
 
 #### getHue()
 

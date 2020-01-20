@@ -21,7 +21,6 @@ describe('Color class constructor', function() {
 	});
 	it('accepts rgb arrays', function(done) {
 		expect(new Color([255, 0, 0]).getRGB()).to.eql([255, 0, 0]);
-		// expect(new Color([255, 0, 0, 0.5]).toString()).to.equal('rgba(255,0,0,0.5)');
 		expect(new Color([255, 0, 0], 0.5).toString()).to.equal('rgba(255,0,0,0.5)');
 		expect(new Color(255, 0, 0).getRGB()).to.eql([255, 0, 0]);
 		expect(new Color(255, 0, 0, 0.5).toString()).to.equal('rgba(255,0,0,0.5)');

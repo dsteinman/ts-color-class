@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>Color Class Names</title>
+    <script type="text/javascript" src="color-class.min.js"></script>
+    <style type="text/css">
+        body {
+            text-align: center;
+        }
+        table {
+            margin: auto;
+        }
+        .color {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+<h2>Color Class Names</h2>
+<table>
+    <script>
+        var names = Color.getNames();
+		for (var name in names) {
+			var color = new Color(name);
+			document.write('<tr>' +
+				'<td class="color" style="background-color:' + color + '"></td>'+
+				'<td class="name">new Color(\'' + name + '\')</td>' +
+				'</tr>');
+		}
+    </script>
+</table>
+
+</body>
+</html>
