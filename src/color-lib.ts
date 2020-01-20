@@ -1,3 +1,4 @@
+import {HSL} from './interfaces';
 import colorNames from './color-names';
 
 export function isColorValue(value: number): boolean {
@@ -179,7 +180,7 @@ export function hsl2rgb(hsl: any): number[] {
     return [r, g, b];
 }
 
-export function rgb2hsl(rgb: number[]): object {
+export function rgb2hsl(rgb: number[]): HSL {
     let r = rgb[0] / 255;
     let g = rgb[1] / 255;
     let b = rgb[2] / 255;
@@ -205,4 +206,39 @@ export function rgb2hsl(rgb: number[]): object {
         s,
         l
     };
+}
+
+export function combine(s: number[], t: number[], amount: number) {
+    amount = typeof amount==='number'? amount : 0.5;
+    var r = Math.round((t[0] - s[0]) * amount);
+    var g = Math.round((t[1] - s[1]) * amount);
+    var b = Math.round((t[2] - s[2]) * amount);
+    var rgb = [s[0] + r, s[1] + g, s[2] + b];
+    if (s.length === 4) rgb[3] = s[3];
+    return rgb;
+}
+
+export function invert(c: number[]): number[] {
+    var rgba = c.slice();
+    for (var i = 0; i < 3; i++) {
+        rgba[i] = 255 - rgba[i];
+    }
+    return rgba;
+}
+
+export function tint(sourceHue: number, targetHue: number, amount: number): number  {
+    // var sH = getHue(sourceColor);
+    var sH = sourceHue;
+    // var tH = getHue(targetColor);
+    var tH = targetHue;
+    var diff = tH - sH;
+    // if (diff > 0 && diff > 0.5) diff -= 1;
+    // else if (diff < 0 && diff < -0.5) diff += 1;
+    var dH = diff * amount;
+
+    let newh = sH + dH;
+    if (newh < 0) newh += 1;
+    if (newh > 1) newh -= 1;
+    return newh;
+    // return shiftHSL(sourceColor, dH, null, null);
 }

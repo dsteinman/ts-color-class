@@ -25,7 +25,7 @@ var Color = /** @class */ (function () {
             }
             else if (arguments.length === 4 && color_lib_1.isRGBAArray([any, green, blue, alpha])) {
                 this.rgb = [any, green, blue];
-                this.a = 1;
+                this.a = alpha;
             }
             else
                 throw Error('invalid color');
@@ -68,13 +68,31 @@ var Color = /** @class */ (function () {
                     throw Error('invalid color');
             }
             else {
-                if (color_lib_1.isHSLA(any)) {
+                if (any instanceof Color) {
+                    if (any.hsl) {
+                        this.hsl = __assign({}, any.hsl);
+                    }
+                    if (any.rgb) {
+                        this.rgb = any.rgb.slice();
+                    }
+                    if (arguments.length === 2) {
+                        if (color_lib_1.isAlphaValue(arguments[1])) {
+                            this.a = arguments[1];
+                        }
+                        else
+                            throw Error('invalid color');
+                    }
+                    else {
+                        this.a = any.a;
+                    }
+                }
+                else if (color_lib_1.isHSLA(any)) {
                     this.hsl = {
                         h: any.h,
-                        s: any.l,
-                        l: any.l,
-                        a: any.a
+                        s: any.s,
+                        l: any.l
                     };
+                    this.a = any.a;
                 }
                 else if (color_lib_1.isHSL(any)) {
                     this.hsl = __assign({}, any);
@@ -98,11 +116,6 @@ var Color = /** @class */ (function () {
         }
         return this.rgb;
     };
-    Color.prototype.getRGBA = function () {
-        var rgba = this.getRGB();
-        rgba.push(this.a);
-        return rgba;
-    };
     Color.prototype.getRGB = function () {
         return this._getRGB().slice();
     };
@@ -111,7 +124,6 @@ var Color = /** @class */ (function () {
     };
     Color.prototype._getHSL = function () {
         if (!this.hsl) {
-            console.log('calculate hsl');
             this.hsl = color_lib_1.rgb2hsl(this.rgb);
         }
         return this.hsl;
@@ -122,15 +134,186 @@ var Color = /** @class */ (function () {
     Color.prototype.alpha = function (alpha) {
         if (color_lib_1.isAlphaValue(alpha)) {
             if (this.hsl) {
-                return new Color(this.getHSL()); // todo: add ,this.a
+                return new Color(this.getHSL(), alpha);
             }
             else {
-                return new Color(this.getRGBA()); // todo: add ,this.a
+                return new Color(this.getRGB(), alpha);
             }
         }
         else {
             throw new Error('invalid alpha value');
         }
+    };
+    Color.prototype.getRed = function () {
+        return this._getRGB()[0];
+    };
+    Color.prototype.red = function (r) {
+        if (color_lib_1.isColorValue(r)) {
+            var rgb = this._getRGB();
+            return new Color([r, rgb[1], rgb[2]], this.a);
+        }
+        else
+            throw new Error('invalid red');
+    };
+    Color.prototype.getGreen = function () {
+        return this._getRGB()[1];
+    };
+    Color.prototype.green = function (g) {
+        if (color_lib_1.isColorValue(g)) {
+            var rgb = this._getRGB();
+            return new Color([rgb[0], g, rgb[2]], this.a);
+        }
+        else
+            throw new Error('invalid green');
+    };
+    Color.prototype.getBlue = function () {
+        return this._getRGB()[2];
+    };
+    Color.prototype.blue = function (b) {
+        if (color_lib_1.isColorValue(b)) {
+            var rgb = this._getRGB();
+            return new Color([rgb[0], rgb[1], b], this.a);
+        }
+        else
+            throw new Error('invalid blue');
+    };
+    Color.prototype.getAlpha = function () {
+        return this.a;
+    };
+    Color.prototype.getSaturation = function () {
+        var hsl = this._getHSL();
+        return hsl.s;
+    };
+    Color.prototype.getHue = function () {
+        var hsl = this._getHSL();
+        return hsl.h;
+    };
+    Color.prototype.hue = function (hue) {
+        if (color_lib_1.isAlphaValue(hue)) {
+            var hsl = this._getHSL();
+            return new Color({
+                h: hue,
+                s: hsl.s,
+                l: hsl.l
+            }, this.a);
+        }
+        else
+            throw new Error('invalid hue');
+    };
+    Color.prototype.shiftHue = function (amount) {
+        var hsl = this._getHSL();
+        var newHue = hsl.h + amount;
+        if (newHue > 1) {
+            var x = Math.floor(newHue);
+            newHue -= x;
+        }
+        if (newHue < -1) {
+            var x = Math.floor(newHue);
+            newHue += Math.abs(x);
+        }
+        if (newHue < 0) {
+            newHue += 1;
+        }
+        return new Color({
+            h: newHue,
+            s: hsl.s,
+            l: hsl.l
+        }, this.a);
+    };
+    Color.prototype.saturation = function (saturation) {
+        if (color_lib_1.isAlphaValue(saturation)) {
+            var hsl = this._getHSL();
+            return new Color({
+                h: hsl.h,
+                s: saturation,
+                l: hsl.l
+            }, this.a);
+        }
+        else
+            throw new Error('invalid saturation');
+    };
+    Color.prototype.saturate = function (amount) {
+        if (amount >= -1 && amount <= 1) {
+            var s = this.getSaturation();
+            s += amount;
+            if (s > 1)
+                s = 1;
+            if (s < 0)
+                s = 0;
+            return this.saturation(s);
+        }
+        else
+            throw new Error('invalid saturate');
+    };
+    Color.prototype.desaturate = function (amount) {
+        return this.saturate(-amount);
+    };
+    Color.prototype.getLightness = function () {
+        var hsl = this._getHSL();
+        return hsl.l;
+    };
+    Color.prototype.lightness = function (lightness) {
+        if (color_lib_1.isAlphaValue(lightness)) {
+            var hsl = this._getHSL();
+            return new Color({
+                h: hsl.h,
+                s: hsl.s,
+                l: lightness
+            }, this.a);
+        }
+    };
+    Color.prototype.lighten = function (amount) {
+        if (amount >= -1 && amount <= 1) {
+            var hsl = this._getHSL();
+            var l = hsl.l + amount;
+            if (l > 1)
+                l = 1;
+            if (l < 0)
+                l = 0;
+            return new Color({
+                h: hsl.h,
+                s: hsl.s,
+                l: l
+            }, this.a);
+        }
+        else
+            throw new Error('invalid lighten');
+    };
+    Color.prototype.darken = function (amount) {
+        return this.lighten(-amount);
+    };
+    Color.prototype.combine = function (colorValue, percentage) {
+        var color;
+        if (colorValue instanceof Color) {
+            color = colorValue;
+        }
+        else {
+            color = new Color(colorValue);
+        }
+        var newrgb = color_lib_1.combine(this._getRGB(), color._getRGB(), percentage || 0.5);
+        return new Color(newrgb, this.a);
+    };
+    Color.prototype.invert = function () {
+        return new Color(color_lib_1.invert(this._getRGB()), this.a);
+    };
+    Color.prototype.tint = function (colorValue, percentage) {
+        var color;
+        if (colorValue instanceof Color) {
+            color = colorValue;
+        }
+        else {
+            color = new Color(colorValue);
+        }
+        if (typeof percentage === 'undefined') {
+            percentage = 0.5;
+        }
+        var h = color_lib_1.tint(this.getHue(), color.getHue(), percentage);
+        console.log('tine h', h);
+        return new Color({
+            h: h,
+            s: this.hsl.s,
+            l: this.hsl.l
+        }, this.a);
     };
     Color.prototype.toString = function () {
         if (this.a === 0) {

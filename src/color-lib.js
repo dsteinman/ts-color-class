@@ -213,3 +213,40 @@ function rgb2hsl(rgb) {
     };
 }
 exports.rgb2hsl = rgb2hsl;
+function combine(s, t, amount) {
+    amount = typeof amount === 'number' ? amount : 0.5;
+    var r = Math.round((t[0] - s[0]) * amount);
+    var g = Math.round((t[1] - s[1]) * amount);
+    var b = Math.round((t[2] - s[2]) * amount);
+    var rgb = [s[0] + r, s[1] + g, s[2] + b];
+    if (s.length === 4)
+        rgb[3] = s[3];
+    return rgb;
+}
+exports.combine = combine;
+function invert(c) {
+    var rgba = c.slice();
+    for (var i = 0; i < 3; i++) {
+        rgba[i] = 255 - rgba[i];
+    }
+    return rgba;
+}
+exports.invert = invert;
+function tint(sourceHue, targetHue, amount) {
+    // var sH = getHue(sourceColor);
+    var sH = sourceHue;
+    // var tH = getHue(targetColor);
+    var tH = targetHue;
+    var diff = tH - sH;
+    // if (diff > 0 && diff > 0.5) diff -= 1;
+    // else if (diff < 0 && diff < -0.5) diff += 1;
+    var dH = diff * amount;
+    var newh = sH + dH;
+    if (newh < 0)
+        newh += 1;
+    if (newh > 1)
+        newh -= 1;
+    return newh;
+    // return shiftHSL(sourceColor, dH, null, null);
+}
+exports.tint = tint;
