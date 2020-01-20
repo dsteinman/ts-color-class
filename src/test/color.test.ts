@@ -339,7 +339,7 @@ describe('Getters', function() {
 
 describe('Color.getNames', function() {
 	it('returns the color names literal', function(done) {
-		// expect(Color.getNames().red).to.be.eql([255,0,0]);
+		expect(Color.getNames()['red']).to.be.eql([255,0,0]);
 		done();
 	});
 });

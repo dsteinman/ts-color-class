@@ -349,7 +349,7 @@ class Color {
         }
     }
 
-    static getNames(): object {
+    static getNames(): any {
         return colorNames;
     }
 }
