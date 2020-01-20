@@ -16,6 +16,8 @@ import {
 
 import {HSL} from './interfaces';
 
+import colorNames from './color-names';
+
 class Color {
     private rgb: number[];
     private hsl: HSL;
@@ -333,6 +335,10 @@ class Color {
         } else {
             return this.getHex();
         }
+    }
+
+    static getNames(): object {
+        return colorNames;
     }
 }
 

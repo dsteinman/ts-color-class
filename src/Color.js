@@ -12,6 +12,7 @@ var __assign = (this && this.__assign) || function () {
 };
 exports.__esModule = true;
 var color_lib_1 = require("./color-lib");
+var color_names_1 = require("./color-names");
 var Color = /** @class */ (function () {
     function Color(any, green, blue, alpha) {
         if (arguments.length === 0) {
@@ -325,6 +326,9 @@ var Color = /** @class */ (function () {
         else {
             return this.getHex();
         }
+    };
+    Color.getNames = function () {
+        return color_names_1["default"];
     };
     return Color;
 }());

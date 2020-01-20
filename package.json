@@ -9,6 +9,7 @@
     "api": "./node_modules/.bin/jsdoc color-class.js -d docs/api",
     "build": "webpack",
     "build:watch": "NODE_ENV=test nodemon -w src -e ts -x webpack",
+    "ts": "npx tsc src/Color.ts",
     "ts:watch": "NODE_ENV=test nodemon -w src -e ts -x npx tsc src/Color.ts"
   },
   "repository": {
