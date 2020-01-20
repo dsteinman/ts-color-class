@@ -102,7 +102,7 @@ class Color {
         } else throw new Error('invalid color');
     }
 
-    _getRGB(): number[] {
+    private _getRGB(): number[] {
         if (!this.rgb) {
             this.rgb = hsl2rgb(this.hsl);
         }
@@ -117,7 +117,7 @@ class Color {
         return rgb2hex(this._getRGB());
     }
 
-    _getHSL(): HSL {
+    private _getHSL(): HSL {
         if (!this.hsl) {
             this.hsl = rgb2hsl(this.rgb);
         }
@@ -178,7 +178,7 @@ class Color {
         else throw new Error('invalid blue');
     }
 
-    getAlpha() {
+    getAlpha(): number {
         return this.a;
     }
 
@@ -300,7 +300,7 @@ class Color {
         return new Color(newrgb, this.a);
     }
 
-    invert() {
+    invert(): Color {
         return new Color( invert(this._getRGB()), this.a );
     }
 
@@ -316,7 +316,6 @@ class Color {
             percentage = 0.5;
         }
         let h = tint(this.getHue(), color.getHue(), percentage);
-        console.log('tine h', h);
         return new Color({
             h,
             s: this.hsl.s,
@@ -324,7 +323,7 @@ class Color {
         }, this.a);
     }
 
-    toString() {
+    toString(): string {
         if (this.a === 0) {
             return 'transparent';
         }

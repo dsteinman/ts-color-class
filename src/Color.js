@@ -308,7 +308,6 @@ var Color = /** @class */ (function () {
             percentage = 0.5;
         }
         var h = color_lib_1.tint(this.getHue(), color.getHue(), percentage);
-        console.log('tine h', h);
         return new Color({
             h: h,
             s: this.hsl.s,

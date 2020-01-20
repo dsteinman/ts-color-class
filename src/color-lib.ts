@@ -41,18 +41,6 @@ export function isHex6(colorString: string): boolean {
     return /^#[0-9a-fA-F]{6}/.test(colorString);
 }
 
-export function isColorName(colorString: string): boolean {
-    return !!getColorName(colorString);
-}
-
-// export function isRGBString(colorString: string): boolean {
-//     return /rgb\( ?(\d+), ?(\d+), ?(\d+) ?\)/.test(colorString);
-// }
-//
-// export function isRGBAString(colorString: string): boolean {
-//     return /rgba\( ?(\d+), ?(\d+), ?(\d+), ?(\d+.?\d*) ?\)/.test(colorString);
-// }
-
 export function parseColorString(colorString: string): number[] {
     let c = colorString;
 
@@ -89,19 +77,6 @@ export function parseColorString(colorString: string): number[] {
         return name;
     }
 }
-
-// export function isColorString(colorString: string): boolean {
-//     if (isHex3(colorString)) {
-//         return true;
-//     }
-//     if (isHex6(colorString)) {
-//         return true;
-//     }
-//     if (isColorName(colorString)) {
-//         return true;
-//     }
-//     return false;
-// }
 
 export function getColorName(colorString: string): number[] {
     let colStr = colorString.toLowerCase();
@@ -227,18 +202,12 @@ export function invert(c: number[]): number[] {
 }
 
 export function tint(sourceHue: number, targetHue: number, amount: number): number  {
-    // var sH = getHue(sourceColor);
     var sH = sourceHue;
-    // var tH = getHue(targetColor);
     var tH = targetHue;
     var diff = tH - sH;
-    // if (diff > 0 && diff > 0.5) diff -= 1;
-    // else if (diff < 0 && diff < -0.5) diff += 1;
     var dH = diff * amount;
-
     let newh = sH + dH;
     if (newh < 0) newh += 1;
     if (newh > 1) newh -= 1;
     return newh;
-    // return shiftHSL(sourceColor, dH, null, null);
 }

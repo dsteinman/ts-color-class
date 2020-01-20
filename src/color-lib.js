@@ -41,17 +41,6 @@ function isHex6(colorString) {
     return /^#[0-9a-fA-F]{6}/.test(colorString);
 }
 exports.isHex6 = isHex6;
-function isColorName(colorString) {
-    return !!getColorName(colorString);
-}
-exports.isColorName = isColorName;
-// export function isRGBString(colorString: string): boolean {
-//     return /rgb\( ?(\d+), ?(\d+), ?(\d+) ?\)/.test(colorString);
-// }
-//
-// export function isRGBAString(colorString: string): boolean {
-//     return /rgba\( ?(\d+), ?(\d+), ?(\d+), ?(\d+.?\d*) ?\)/.test(colorString);
-// }
 function parseColorString(colorString) {
     var c = colorString;
     if (isHex6(c)) {
@@ -84,18 +73,6 @@ function parseColorString(colorString) {
     }
 }
 exports.parseColorString = parseColorString;
-// export function isColorString(colorString: string): boolean {
-//     if (isHex3(colorString)) {
-//         return true;
-//     }
-//     if (isHex6(colorString)) {
-//         return true;
-//     }
-//     if (isColorName(colorString)) {
-//         return true;
-//     }
-//     return false;
-// }
 function getColorName(colorString) {
     var colStr = colorString.toLowerCase();
     if (colStr in color_names_1["default"]) {
@@ -233,13 +210,9 @@ function invert(c) {
 }
 exports.invert = invert;
 function tint(sourceHue, targetHue, amount) {
-    // var sH = getHue(sourceColor);
     var sH = sourceHue;
-    // var tH = getHue(targetColor);
     var tH = targetHue;
     var diff = tH - sH;
-    // if (diff > 0 && diff > 0.5) diff -= 1;
-    // else if (diff < 0 && diff < -0.5) diff += 1;
     var dH = diff * amount;
     var newh = sH + dH;
     if (newh < 0)
@@ -247,6 +220,5 @@ function tint(sourceHue, targetHue, amount) {
     if (newh > 1)
         newh -= 1;
     return newh;
-    // return shiftHSL(sourceColor, dH, null, null);
 }
 exports.tint = tint;
