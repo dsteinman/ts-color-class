@@ -493,7 +493,7 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color('rgb(125,0,0)').saturate(0.2).toString(); // returns "#7D0000"
+     * new Color('corn silk 3').saturate(0.1).toString(); // returns "#d3ccab"
      *
      */
     Color.prototype.saturate = function (amount) {
@@ -519,7 +519,7 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color(125,0,0).desaturate(0.2).toString(); // returns "#710C0C"
+     * new Color('#d3ccab').desaturate(0.1).toString(); // returns "#cdc8b1"
      *
      */
     Color.prototype.desaturate = function (amount) {
@@ -625,8 +625,7 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color(0).combine('#fff').toString(); // returns "#808080"
-     * new Color(255,0,0).combine('#00f',0.7).toString(); // returns "#4D00B3"
+     * new Color('black').combine('red', 0.5).toString(); // returns "#800000"
      *
      */
     Color.prototype.combine = function (colorValue, percentage) {
@@ -671,8 +670,8 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color('rgb(255,0,0)').tint('#00f',0.5).toString(); // returns "#F0F"
-     * new Color('rgb(0,0,100)').tint('rgb(100,0,0)',0.1).toString(); // returns "#140064"
+     * new Color('#f00').tint('#00f',0.5).toString(); // returns "#0f0"
+     * new Color('rgb(0,0,100)').tint('rgb(100,0,0)',0.1).toString(); // returns "#002864"
      *
      */
     Color.prototype.tint = function (colorValue, percentage) {

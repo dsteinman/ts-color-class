@@ -115,6 +115,7 @@ describe('.alpha()', function() {
 describe('.saturation()', function() {
 	it('sets the saturation value', function(done) {
 		expect(new Color(100,50,50).saturation(0).toString()).to.be.equal("#4b4b4b");
+		expect(new Color(100,50,50).saturation(0.5).toString()).to.be.equal("#712626");
 		expect(new Color(100,50,50).saturation(1).toString()).to.be.equal("#960000");
 		done();
 	});

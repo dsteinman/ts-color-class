@@ -85,7 +85,7 @@ Any of the colors in the [named color list](https://dsteinman.github.io/color-cl
 The hash of names and their RGB values can be accessed using:
 
 ```
-Color.names
+Color.getNames()
 ```
 
 ## Methods
@@ -99,11 +99,18 @@ new Color('red').toString()
 // returns "#f00"
 ```
 
-If an alpha channel is supplied, an rgba string is returned:
+If an alpha channel is supplied, and it is not equal to 1.0, an rgba string is returned:
 
 ```
 new Color('red').alpha(0.5).toString()
 // returns "rgba(255,0,0,0.5)"
+```
+
+If the alpha channel is equal to 0, then `transparent` is returned:
+
+```
+new Color('red').alpha(0).toString()
+// returns "transparent"
 ```
 
 In certain cases, such as when applying styles in CSS, using `console.log()`, or when manipulating strings, the `.toString()` is implied and can be omitted;
@@ -113,7 +120,7 @@ document.body.style.backgroundColor = new Color('red').darken(0.3);
 ```
 
 ```
-console.log( new Color('red').darken(0.3) );
+console.log( "color = " + new Color('red').darken(0.3) );
 ```
 
 ```
@@ -139,7 +146,7 @@ console.log('darkpurple = '+darkpurple);
 // darkpurple = rgba(128,0,102,0.5)
 ```
 
-#### alpha()
+#### alpha( value )
 
 Sets the alpha channel (transparency):
 
@@ -148,25 +155,25 @@ new Color('red').alpha(0.5).toString();
 // returns "rgba(255,0,0,0.5)"
 ```
 
-#### lighten()
+#### lighten( amount )
 
 Increases the lightness value (0 - 1):
 
 ```
-new Color('red').lighten(0.5).toString();
-// returns '#ff8080'
+new Color('#f00').lighten(0.1).toString();
+// returns '#33f'
 ```
 
-#### darken()
+#### darken( amount )
 
 Decreases the lightness value (0 - 1):
 
 ```
-new Color('red').darken(0.5).toString();
-// returns '#800000'
+new Color('#f00').darken(0.5).toString();
+// returns '#c00'
 ```
 
-#### saturate()
+#### saturate( amount )
 
 Increases the saturation value (0 - 1):
 
@@ -174,20 +181,22 @@ Increases the saturation value (0 - 1):
 var cornsilk = new Color('corn silk 3');
 console.log(cornsilk.getSaturation());
 // returns 0.2187500000000001
-console.log(cornsilk.saturate(0.2).getSaturation());
-// returns 0.26562499999999994
+
+// increase saturation fom 0.21 to 0.31:
+console.log(cornsilk.saturate(0.1).getSaturation());
+// returns 0.3187500000000001
 ```
 
-#### desaturate()
+#### desaturate( amount )
 
 Decreases the saturation value (0 - 1):
 
 ```
-new Color([125,0,0]).desaturate(0.2).toString()
-// returns '#710c0c'
+new Color('#d3ccab'.desaturate(0.1).toString()
+// returns '#cdc8b1'
 ```
 
-#### shiftHue()
+#### shiftHue( amount )
 
 Adjusts the hue value (0 - 1):
 
@@ -196,38 +205,30 @@ new Color(255, 255, 0).shiftHue(0.25).toString();
 // returns '#00ff7f'
 ```
 
-#### combine()
+#### combine( Color, percent )
 
 Combines the color with another.
 
-By default, combines at 50%:
-
-```
-new Color('black').combine('red').toString();
-// returnss '#800000'
-```
-
 Add a percentage parameter (0 - 1) to define how much of the new color to combine:
-
 ```
-new Color('black').combine('red', 0.2).toString();
-// returns '#300'
+new Color('black').combine('red', 0.5).toString();
+// returns '#800000'
 ```
 
-#### tint()
+#### tint( Color, percent )
 
-Adjusts the hue toward another color (0 - 1).
+Adjusts the hue toward another color based on a percentage value (0 - 1).
 
 This is similar to `combine()` but only applies to the hue, not saturation or lightness.
 
 ```
-new Color('red').tint([0,0,255], 0.5).toString();
-// returns '#f0f'
+new Color('red').tint('blue', 0.5).toString();
+// returns '#0f0'
 new Color('red').tint([0,0,1], 0.5).toString();
-// also returns '#f0f'
+// also returns '#0f0'
 ```
 
-#### hue()
+#### hue( value )
 
 Sets the hue value (0 - 1):
 
@@ -236,18 +237,16 @@ new Color('red').hue(0.23).toString()
 // returns '#9eff00'
 ```
 
-#### saturation()
+#### saturation( value )
 
 Sets the saturation value (0 - 1):
 
 ```
-new Color(100,50,50).saturation(0).toString()
-// returns '#4b4b4b' (greyscale)
-new Color(100,50,50).saturation(1).toString();
-// returns '#960000' (dark red)
+new Color(100,50,50).saturation(0.5).toString()
+// returns "#712626";
 ```
 
-#### lightness()
+#### lightness( value )
 
 Sets the lightness value (0 - 1);
 
@@ -265,7 +264,7 @@ new Color('#fff').invert().toString()
 // returns '#000'
 ```
 
-#### red()
+#### red( value )
 
 Sets the red value (0 - 255):
 
@@ -274,7 +273,7 @@ new Color('black').red(255).toString()
 // returns '#f00'
 ```
 
-#### green()
+#### green( value )
 
 Sets the green value (0 - 255):
 
@@ -283,7 +282,7 @@ new Color('black').green(255).toString()
 // returns '#0f0'
 ```
 
-#### blue()
+#### blue( value )
 
 Sets the blue value (0 - 255):
 
