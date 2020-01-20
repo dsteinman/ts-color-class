@@ -1,5 +1,4 @@
 node_modules/
-build/
 *.out
 npm-debug.log
 .DS_STORE
