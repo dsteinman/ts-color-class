@@ -406,9 +406,9 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color('#f00').hue(2/3).toString(); // returns "#00F"
-     * new Color('#0f0').hue(1).toString(); // returns "#F00"
-     * new Color('#00f').hue(1/3).toString(); // returns "#0F0"
+     * new Color('#f00').hue(2/3).toString(); // returns "#00f"
+     * new Color('#0f0').hue(1/3).toString(); // returns "#0f0"
+     * new Color('#00f').hue(0.23).toString(); // returns "#9eff00"
      *
      */
     Color.prototype.hue = function (hue) {
@@ -433,7 +433,7 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color(255,255,0).shiftHue(0.25).toString(); // returns "#00FF7F"
+     * new Color(255,255,0).shiftHue(0.25).toString(); // returns "#00ff7f"
      *
      */
     Color.prototype.shiftHue = function (amount) {
@@ -466,9 +466,7 @@ var Color = /** @class */ (function () {
      * @instance
      *
      * @example
-     * new Color('rgb(100,50,50)').saturation(0).toString(); // returns "#4B4B4B"
-     * new Color('rgb(50,0,0)').saturation(0.5).toString();  // returns "#260C0C"
-     * new Color('rgb(50,50,100)').saturation(1).toString(); // returns "#000096"
+     * new Color(100,50,50).saturation(0.5).toString().to.be.equal("#712626");
      *
      */
     Color.prototype.saturation = function (saturation) {
