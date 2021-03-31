@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.tint = exports.invert = exports.combine = exports.rgb2hsl = exports.hsl2rgb = exports.rgb2hex = exports.isHSL = exports.getColorName = exports.parseColorString = exports.isHex6 = exports.isHex3 = exports.isRGBAArray = exports.isRGBArray = exports.isAlphaValue = exports.isColorValue = void 0;
 var color_names_1 = __importDefault(require("./color-names"));
 function isColorValue(value) {
     return value >= 0 && value <= 255;

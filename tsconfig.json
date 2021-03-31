@@ -1,23 +1,13 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
-    "noImplicitAny": true,
-//    "module": "es5",
-//    "module": "es6",
+    "noImplicitAny": false,
     "module": "commonjs",
     "target": "es5",
-//    "target": "es5",
-//    "jsx": "react",
-
-//    "target": "es6",
-//    "module": "es6",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "esModuleInterop": true,
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
-    "lib": ["es2017", "dom"]
+    "esModuleInterop": true, 
+    "declaration": true,
+    "types": [ "node", "mocha", "chai" ]
+    
   },
   "include": [
     "src/**/*"

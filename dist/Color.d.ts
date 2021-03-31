@@ -1,24 +1,4 @@
-
-import {
-    isRGBArray,
-    isRGBAArray,
-    isColorValue,
-    isAlphaValue,
-    isHSL,
-    parseColorString,
-    rgb2hex,
-    hsl2rgb,
-    rgb2hsl,
-    combine,
-    tint,
-    invert
-} from './color-lib';
-
-import {HSL} from './interfaces';
-
-import colorNames from './color-names';
-
-
+import { HSL } from './interfaces';
 /** @class Color
  * Color class accepts a CSS color string, rgb, hsl data as the input, manipulate the color, and returns a CSS-compatible color string.
  * @constructor
@@ -64,11 +44,10 @@ import colorNames from './color-names';
  *     l: 1
  * }, 0.5)
  */
-class Color {
-    private rgb: number[];
-    private hsl: HSL;
-    private a: number;
-
+declare class Color {
+    private rgb;
+    private hsl;
+    private a;
     constructor();
     constructor(any: any);
     constructor(any: Color);
@@ -81,89 +60,7 @@ class Color {
     constructor(any: HSL, alpha: number);
     constructor(red: number, green: number, blue: number);
     constructor(red: number, green: number, blue: number, alpha: number);
-    constructor(red?: any, green?: number, blue?: number, alpha?: number) {
-        if (arguments.length === 0) {
-            this.rgb = [0, 0, 0];
-            this.a = 0;
-        } else if (typeof arguments[0] === 'number') {
-            if (arguments.length === 3 && isRGBArray([red, green, blue])) {
-                this.rgb = [red, green, blue];
-                this.a = 1;
-            } else if (arguments.length === 4 && isRGBAArray([red, green, blue, alpha])) {
-                this.rgb = [red, green, blue];
-                this.a = alpha;
-            } else throw Error('invalid color');
-        } else if (typeof arguments[0] === 'string') {
-            let rgba = parseColorString(arguments[0]);
-            if (rgba) {
-                this.rgb = rgba.slice(0, 3);
-                if (arguments.length === 2 && isAlphaValue(arguments[1])) {
-                    this.a = arguments[1];
-                }
-                else if (rgba.length === 4) {
-                    this.a = rgba[3];
-                }
-                else {
-                    this.a = 1;
-                }
-            } else throw Error('invalid color');
-        } else if (typeof arguments[0] === 'object') {
-            const obj = arguments[0];
-            if (obj.length > 0) {
-                if (obj.length === 3 && isRGBArray(obj)) {
-                    this.rgb = obj.slice(0, 3);
-                    if (arguments.length === 2) {
-                        if (isAlphaValue(arguments[1])) {
-                            this.a = arguments[1];
-                        } else throw new Error('invalid alpha value');
-                    } else {
-                        this.a = 1;
-                    }
-                } else throw Error('invalid color');
-            } else {
-                if (obj instanceof Color) {
-                    if (obj.hsl) {
-                        this.hsl = {
-                            h: obj.hsl.h,
-                            s: obj.hsl.s,
-                            l: obj.hsl.l
-                        };
-                    }
-                    if (obj.rgb) {
-                        this.rgb = obj.rgb.slice();
-                    }
-                    if (arguments.length === 2) {
-                        if (isAlphaValue(arguments[1])) {
-                            this.a = arguments[1];
-                        } else throw new Error('invalid alpha value');
-                    } else {
-                        this.a = obj.a;
-                    }
-                } else if (isHSL(obj)) {
-                    this.hsl = {
-                        h: obj.h,
-                        s: obj.s,
-                        l: obj.l
-                    };
-                    if (arguments.length === 2) {
-                        if (isAlphaValue(arguments[1])) {
-                            this.a = arguments[1];
-                        } else throw new Error('invalid alpha value');
-                    } else {
-                        this.a = 1;
-                    }
-                } else throw Error('invalid color');
-            }
-        } else throw new Error('invalid color');
-    }
-
-    private _getRGB(): number[] {
-        if (!this.rgb) {
-            this.rgb = hsl2rgb(this.hsl);
-        }
-        return this.rgb;
-    }
-
+    private _getRGB;
     /**
      * Return the red, green, blue color values with the alpha channel as an array
      *
@@ -176,10 +73,7 @@ class Color {
      * new Color('red).getRGB();   // returns [255,0,0]
      *
      */
-    getRGB(): number[] {
-        return this._getRGB().slice();
-    }
-
+    getRGB(): number[];
     /**
      * Returns the hexidecimal value of the color
      *
@@ -192,17 +86,8 @@ class Color {
      * new Color('rgba(255,0,0,0.5)').getHex(); // returns "#f00"
      *
      */
-    getHex(): string {
-        return rgb2hex(this._getRGB());
-    }
-
-    private _getHSL(): HSL {
-        if (!this.hsl) {
-            this.hsl = rgb2hsl(this.rgb);
-        }
-        return this.hsl;
-    }
-
+    getHex(): string;
+    private _getHSL;
     /**
      * Returns an [h,s,l] array from color string
      *
@@ -215,15 +100,7 @@ class Color {
      * new Color('#f00').getHSL(); // returns [0,1,0.5]
      *
      */
-    getHSL(): HSL {
-        const hsl = this._getHSL();
-        return {
-            h: hsl.h,
-            s: hsl.s,
-            l: hsl.l
-        }
-    }
-
+    getHSL(): HSL;
     /**
      * Sets the transparency of a color
      *
@@ -237,18 +114,7 @@ class Color {
      * new Color('#f00').alpha(0.5).toString();  // returns "rgba(255,0,0,0.5)"
      *
      */
-    alpha(alpha: number): Color {
-        if (isAlphaValue(alpha)) {
-            if (this.hsl) {
-                return new Color(this.getHSL(), alpha);
-            } else {
-                return new Color(this.getRGB(), alpha);
-            }
-        } else {
-            throw new Error('invalid alpha value');
-        }
-    }
-
+    alpha(alpha: number): Color;
     /**
      * Returns the red component of a color string
      *
@@ -261,10 +127,7 @@ class Color {
      * new Color('#fff').getRed(); // returns 255
      *
      */
-    getRed(): number {
-        return this._getRGB()[0];
-    }
-
+    getRed(): number;
     /**
      * Set the red component of a color
      *
@@ -278,14 +141,7 @@ class Color {
      * new Color('rgb(0,0,255)').red(255).toString();  // returns "#F0F"
      *
      */
-    red(r: number): Color {
-        if (isColorValue(r)) {
-            let rgb = this._getRGB();
-            return new Color( [r, rgb[1], rgb[2]], this.a);
-        }
-        else throw new Error('invalid red');
-    }
-
+    red(r: number): Color;
     /**
      * Returns the green component of a color string
      *
@@ -298,10 +154,7 @@ class Color {
      * new Color('#fff').getGreen(); // returns 255
      *
      */
-    getGreen():number {
-        return this._getRGB()[1];
-    }
-
+    getGreen(): number;
     /**
      * Set the green component of a color
      *
@@ -315,14 +168,7 @@ class Color {
      * new Color('rgb(255,0,0)').green(255).toString();  // returns "#FF0"
      *
      */
-    green(g: number): Color {
-        if (isColorValue(g)) {
-            let rgb = this._getRGB();
-            return new Color( [rgb[0], g, rgb[2]], this.a);
-        }
-        else throw new Error('invalid green');
-    }
-
+    green(g: number): Color;
     /**
      * Returns the blue component of a color string
      *
@@ -335,10 +181,7 @@ class Color {
      * new Color('#fff').getBlue(); // returns 255
      *
      */
-    getBlue(): number {
-        return this._getRGB()[2];
-    }
-
+    getBlue(): number;
     /**
      * Set the blue component of a color
      *
@@ -352,14 +195,7 @@ class Color {
      * new Color('#FF0').blue(255).toString();  // returns "#FFF"
      *
      */
-    blue(b: number): Color {
-        if (isColorValue(b)) {
-            let rgb = this._getRGB();
-            return new Color( [rgb[0], rgb[1], b], this.a);
-        }
-        else throw new Error('invalid blue');
-    }
-
+    blue(b: number): Color;
     /**
      * Returns the transparency of a color
      *
@@ -373,10 +209,7 @@ class Color {
      * new Color('rgba(255,0,0,0.5)').getAlpha(); // returns 0.5
      *
      */
-    getAlpha(): number {
-        return this.a;
-    }
-
+    getAlpha(): number;
     /**
      * Return the "saturation" of a color
      *
@@ -391,11 +224,7 @@ class Color {
      * new Color('rgb(100,0,100)').getSaturation();   // returns 1
      *
      */
-    getSaturation(): number {
-        let hsl = this._getHSL();
-        return hsl.s;
-    }
-
+    getSaturation(): number;
     /**
      * Return the "hue" of a color
      *
@@ -411,11 +240,7 @@ class Color {
      * new Color('#00f').getHue(); // returns 0.6666666666666666
      *
      */
-    getHue(): number {
-        let hsl = this._getHSL();
-        return hsl.h;
-    }
-
+    getHue(): number;
     /**
      * Set the "hue" of a color
      *
@@ -431,18 +256,7 @@ class Color {
      * new Color('#00f').hue(0.23).toString(); // returns "#9eff00"
      *
      */
-    hue(hue: number): Color {
-        if (isAlphaValue(hue)) {
-            let hsl = this._getHSL();
-            return new Color( {
-                h: hue,
-                s: hsl.s,
-                l: hsl.l,
-            }, this.a);
-        }
-        else throw new Error('invalid hue');
-    }
-
+    hue(hue: number): Color;
     /**
      * Shifts the "hue" of a color value by a given percentage
      *
@@ -456,28 +270,7 @@ class Color {
      * new Color(255,255,0).shiftHue(0.25).toString(); // returns "#00ff7f"
      *
      */
-    shiftHue(amount: number): Color {
-        let hsl = this._getHSL();
-        let newHue = hsl.h + amount;
-        if (newHue > 1) {
-            let x = Math.floor(newHue);
-            newHue -= x;
-        }
-        if (newHue < -1) {
-            let x = Math.floor(newHue);
-            newHue += Math.abs(x);
-        }
-        if (newHue < 0) {
-            newHue += 1;
-        }
-
-        return new Color( {
-            h: newHue,
-            s: hsl.s,
-            l: hsl.l,
-        }, this.a);
-    }
-
+    shiftHue(amount: number): Color;
     /**
      * Set the "saturation" of a color
      *
@@ -491,18 +284,7 @@ class Color {
      * new Color(100,50,50).saturation(0.5).toString().to.be.equal("#712626");
      *
      */
-    saturation(saturation: number): Color {
-        if (isAlphaValue(saturation)) {
-            let hsl = this._getHSL();
-            return new Color( {
-                h: hsl.h,
-                s: saturation,
-                l: hsl.l,
-            }, this.a);
-        }
-        else throw new Error('invalid saturation');
-    }
-
+    saturation(saturation: number): Color;
     /**
      * Increases the "saturation" of a color value
      *
@@ -516,17 +298,7 @@ class Color {
      * new Color('corn silk 3').saturate(0.1).toString(); // returns "#d3ccab"
      *
      */
-    saturate(amount: number): Color {
-        if (amount >= -1 && amount <= 1) {
-            let s = this.getSaturation();
-            s += amount;
-            if (s > 1) s = 1;
-            if (s < 0) s = 0;
-            return this.saturation(s);
-        }
-        else throw new Error('invalid saturate');
-    }
-
+    saturate(amount: number): Color;
     /**
      * Decreases the "saturation" of a color value
      *
@@ -540,10 +312,7 @@ class Color {
      * new Color('#d3ccab').desaturate(0.1).toString(); // returns "#cdc8b1"
      *
      */
-    desaturate(amount: number): Color {
-        return this.saturate(-amount);
-    }
-
+    desaturate(amount: number): Color;
     /**
      * Return the lightness of a color (how close to white or black the color is)
      *
@@ -558,11 +327,7 @@ class Color {
      * new Color('rgb(255,255,255)').getLightness(); // returns 1
      *
      */
-    getLightness(): number {
-        let hsl = this._getHSL();
-        return hsl.l;
-    }
-
+    getLightness(): number;
     /**
      * Set the lightness of a color, how close to white or black the color will be
      *
@@ -578,17 +343,7 @@ class Color {
      * new Color('rgb(255,0,0)').lightness(1).toString(); // returns "#FFF"
      *
      */
-    lightness(lightness: number): Color {
-        if (isAlphaValue(lightness)) {
-            let hsl = this._getHSL();
-            return new Color( {
-                h: hsl.h,
-                s: hsl.s,
-                l: lightness,
-            }, this.a);
-        }
-    }
-
+    lightness(lightness: number): Color;
     /**
      * Increases the "lightness" of a color value
      *
@@ -602,21 +357,7 @@ class Color {
      * new Color('#f00').lighten(0.5).toString(); // returns "#FF8080"
      *
      */
-    lighten(amount: number): Color {
-        if (amount >= -1 && amount <= 1) {
-            let hsl = this._getHSL();
-            let l = hsl.l + amount;
-            if (l > 1) l = 1;
-            if (l < 0) l = 0;
-            return new Color( {
-                h: hsl.h,
-                s: hsl.s,
-                l
-            }, this.a);
-        }
-        else throw new Error('invalid lighten');
-    }
-
+    lighten(amount: number): Color;
     /**
      * Decreases the "lightness" of a color value
      *
@@ -630,10 +371,7 @@ class Color {
      * new Color('#f00').darken(0.5).toString(); // returns "#800000"
      *
      */
-    darken(amount: number): Color {
-        return this.lighten(-amount);
-    }
-
+    darken(amount: number): Color;
     /**
      * Changes the color closer to another color by a given percentage
      *
@@ -648,20 +386,7 @@ class Color {
      * new Color('black').combine('red', 0.5).toString(); // returns "#800000"
      *
      */
-    combine(colorValue: any, percentage: number ): Color {
-        if (isAlphaValue(percentage)) {
-            let color;
-            if (colorValue instanceof Color) {
-                color = colorValue;
-            } else {
-                color = new Color(colorValue);
-            }
-            let newrgb = combine(this._getRGB(), color._getRGB(), percentage);
-            return new Color(newrgb, this.a);
-        }
-        else throw new Error('invalid combine percentage');
-    }
-
+    combine(colorValue: any, percentage: number): Color;
     /**
      * Inverts the color
      *
@@ -675,10 +400,7 @@ class Color {
      * new Color('#fff').invert().toString();  // returns "#000"
      *
      */
-    invert(): Color {
-        return new Color( invert(this._getRGB()), this.a );
-    }
-
+    invert(): Color;
     /**
      * Shifts only the hue of a color closer to another color by a given percentage
      *
@@ -694,25 +416,7 @@ class Color {
      * new Color('rgb(0,0,100)').tint('rgb(100,0,0)',0.1).toString(); // returns "#002864"
      *
      */
-    tint (colorValue: any, percentage: number | undefined): Color {
-        let color;
-        if (colorValue instanceof Color) {
-            color = colorValue;
-        }
-        else {
-            color = new Color(colorValue);
-        }
-        if (typeof percentage === 'undefined') {
-            percentage = 0.5;
-        }
-        let h = tint(this.getHue(), color.getHue(), percentage);
-        return new Color({
-            h,
-            s: this.hsl.s,
-            l: this.hsl.l
-        }, this.a);
-    }
-
+    tint(colorValue: any, percentage: number | undefined): Color;
     /**
      * Returns the CSS string of the color, either as hex value, or rgba if an alpha value is defined
      *
@@ -725,18 +429,7 @@ class Color {
      * new Color('rgb(0,0,255)').toString(); // returns "#00f"
      *
      */
-    toString(): string {
-        if (this.a === 0) {
-            return 'transparent';
-        }
-        if (this.a < 1) {
-            let rgb = this._getRGB();
-            return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + this.a + ')';
-        } else {
-            return this.getHex();
-        }
-    }
-
+    toString(): string;
     /**
      * Returns the array of named color values
      *
@@ -750,9 +443,6 @@ class Color {
      * new Color('rgb(0,0,100)').tint('rgb(100,0,0)',0.1).toString(); // returns "#002864"
      *
      */
-    static getNames(): any {
-        return colorNames;
-    }
+    static getNames(): any;
 }
-
 export = Color;

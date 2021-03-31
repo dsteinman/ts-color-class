@@ -1,0 +1,16 @@
+import { HSL } from './interfaces';
+export declare function isColorValue(value: number): boolean;
+export declare function isAlphaValue(value: number): boolean;
+export declare function isRGBArray(rgba: number[]): boolean;
+export declare function isRGBAArray(rgba: number[]): boolean;
+export declare function isHex3(colorString: string): boolean;
+export declare function isHex6(colorString: string): boolean;
+export declare function parseColorString(colorString: string): number[];
+export declare function getColorName(colorString: string): number[];
+export declare function isHSL(hsla: any): boolean;
+export declare function rgb2hex(c: number[]): string;
+export declare function hsl2rgb(hsl: any): number[];
+export declare function rgb2hsl(rgb: number[]): HSL;
+export declare function combine(s: number[], t: number[], amount: number): number[];
+export declare function invert(c: number[]): number[];
+export declare function tint(sourceHue: number, targetHue: number, amount: number): number;

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -61,25 +50,25 @@ var color_names_1 = __importDefault(require("./color-names"));
  * }, 0.5)
  */
 var Color = /** @class */ (function () {
-    function Color(any, green, blue, alpha) {
+    function Color(red, green, blue, alpha) {
         if (arguments.length === 0) {
             this.rgb = [0, 0, 0];
             this.a = 0;
         }
-        else if (typeof any === 'number') {
-            if (arguments.length === 3 && color_lib_1.isRGBArray([any, green, blue])) {
-                this.rgb = [any, green, blue];
+        else if (typeof arguments[0] === 'number') {
+            if (arguments.length === 3 && color_lib_1.isRGBArray([red, green, blue])) {
+                this.rgb = [red, green, blue];
                 this.a = 1;
             }
-            else if (arguments.length === 4 && color_lib_1.isRGBAArray([any, green, blue, alpha])) {
-                this.rgb = [any, green, blue];
+            else if (arguments.length === 4 && color_lib_1.isRGBAArray([red, green, blue, alpha])) {
+                this.rgb = [red, green, blue];
                 this.a = alpha;
             }
             else
                 throw Error('invalid color');
         }
-        else if (typeof any === 'string') {
-            var rgba = color_lib_1.parseColorString(any);
+        else if (typeof arguments[0] === 'string') {
+            var rgba = color_lib_1.parseColorString(arguments[0]);
             if (rgba) {
                 this.rgb = rgba.slice(0, 3);
                 if (arguments.length === 2 && color_lib_1.isAlphaValue(arguments[1])) {
@@ -95,10 +84,11 @@ var Color = /** @class */ (function () {
             else
                 throw Error('invalid color');
         }
-        else if (typeof any === 'object') {
-            if (any.length > 0) {
-                if (any.length === 3 && color_lib_1.isRGBArray(any)) {
-                    this.rgb = any.slice(0, 3);
+        else if (typeof arguments[0] === 'object') {
+            var obj = arguments[0];
+            if (obj.length > 0) {
+                if (obj.length === 3 && color_lib_1.isRGBArray(obj)) {
+                    this.rgb = obj.slice(0, 3);
                     if (arguments.length === 2) {
                         if (color_lib_1.isAlphaValue(arguments[1])) {
                             this.a = arguments[1];
@@ -114,12 +104,16 @@ var Color = /** @class */ (function () {
                     throw Error('invalid color');
             }
             else {
-                if (any instanceof Color) {
-                    if (any.hsl) {
-                        this.hsl = __assign({}, any.hsl);
+                if (obj instanceof Color) {
+                    if (obj.hsl) {
+                        this.hsl = {
+                            h: obj.hsl.h,
+                            s: obj.hsl.s,
+                            l: obj.hsl.l
+                        };
                     }
-                    if (any.rgb) {
-                        this.rgb = any.rgb.slice();
+                    if (obj.rgb) {
+                        this.rgb = obj.rgb.slice();
                     }
                     if (arguments.length === 2) {
                         if (color_lib_1.isAlphaValue(arguments[1])) {
@@ -129,11 +123,15 @@ var Color = /** @class */ (function () {
                             throw new Error('invalid alpha value');
                     }
                     else {
-                        this.a = any.a;
+                        this.a = obj.a;
                     }
                 }
-                else if (color_lib_1.isHSL(any)) {
-                    this.hsl = __assign({}, any);
+                else if (color_lib_1.isHSL(obj)) {
+                    this.hsl = {
+                        h: obj.h,
+                        s: obj.s,
+                        l: obj.l
+                    };
                     if (arguments.length === 2) {
                         if (color_lib_1.isAlphaValue(arguments[1])) {
                             this.a = arguments[1];
@@ -207,7 +205,12 @@ var Color = /** @class */ (function () {
      *
      */
     Color.prototype.getHSL = function () {
-        return __assign({}, this._getHSL());
+        var hsl = this._getHSL();
+        return {
+            h: hsl.h,
+            s: hsl.s,
+            l: hsl.l
+        };
     };
     /**
      * Sets the transparency of a color
@@ -690,6 +693,18 @@ var Color = /** @class */ (function () {
             l: this.hsl.l
         }, this.a);
     };
+    /**
+     * Returns the CSS string of the color, either as hex value, or rgba if an alpha value is defined
+     *
+     * @method toString
+     * @memberof Color
+     * @return {String} css color value
+     * @instance
+     *
+     * @example
+     * new Color('rgb(0,0,255)').toString(); // returns "#00f"
+     *
+     */
     Color.prototype.toString = function () {
         if (this.a === 0) {
             return 'transparent';
@@ -702,6 +717,19 @@ var Color = /** @class */ (function () {
             return this.getHex();
         }
     };
+    /**
+     * Returns the array of named color values
+     *
+     * @method getNames
+     * @memberof Color
+     * @return {Array} named color values
+     * @instance
+     *
+     * @example
+     * new Color('#f00').tint('#00f',0.5).toString(); // returns "#0f0"
+     * new Color('rgb(0,0,100)').tint('rgb(100,0,0)',0.1).toString(); // returns "#002864"
+     *
+     */
     Color.getNames = function () {
         return color_names_1.default;
     };
