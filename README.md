@@ -9,17 +9,17 @@ This module is a more simple alternative to the npm modules [color](https://www.
 - toString() always returns CSS-compatible color strings like `"#fff"` so the color objects can be used to change CSS style values or when creating strings, eg: `elm.style.color = new Color('azure')`
 - in addition to RGB arrays, also accepts CSS strings as inputs, eg: `new Color('rgba(255,0,0,0.5)')` or `new Color('#ff00ff')`
 - HSL calculations use floating point values between 0.0 and 1.0
-- larger list of [color names](https://dsteinman.github.io/color-class/colors.html)
+- larger list of [color names](https://dsteinman.github.io/ts-color-class/colors.html)
 - full test coverage using `npm run test` and for ES5 use `npm run test:es5`
 - invalid constructor or methods throw errors
 - all setter methods are immutable, chainable, and always return a new instance of `Color`
-- the [static minified build](https://github.com/dsteinman/color-class/tree/master/build) provides a global `Color` object available in any html file
+- the [static minified build](https://github.com/dsteinman/ts-color-class/tree/master/build) provides a global `Color` object available in any html file
 - no dependencies
 - small build size (22KB)
 
 ## Documentation
 
-- [Color Class API](https://dsteinman.github.io/color-class/api/Color.html)
+- [Color Class API](https://dsteinman.github.io/ts-color-class/api/Color.html)
 
 ## Install
 
@@ -37,7 +37,7 @@ var Color = require('ts-color-class');
 
 #### Or use the static build
 
-The static build file `color-class.min.js` is included in the [/build](https://github.com/dsteinman/color-class/tree/master/build) directory.
+The static build file `color-class.min.js` is included in the [/build](https://github.com/dsteinman/ts-color-class/tree/master/build) directory.
 
 ```
 <script type="text/javascript" src="color-class.min.js"></script>
@@ -80,7 +80,7 @@ new Color({ h: 0, s: 1, l: 0.5 }, 0.5); // 50% transparent
 
 ## Color Names
 
-Any of the colors in the [named color list](https://dsteinman.github.io/color-class/colors.html) can be used as the input value.
+Any of the colors in the [named color list](https://dsteinman.github.io/ts-color-class/colors.html) can be used as the input value.
 
 The hash of names and their RGB values can be accessed using:
 

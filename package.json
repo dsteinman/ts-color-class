@@ -1,6 +1,6 @@
 {
   "name": "ts-color-class",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "JavaScript Color class that manipulates colors and converts them to CSS-compatible hex or rgba strings",
   "main": "dist/Color.js",
   "typings": "./index.d.ts",
