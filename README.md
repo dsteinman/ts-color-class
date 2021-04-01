@@ -51,7 +51,7 @@ new Color( inputValue )
 
 The `inputValue` can be one of:
 
-- a CSS string
+- a CSS string, either a hex, rgb, rgba, or a [named color](https://dsteinman.github.io/ts-color-class/colors.html)
 - an array of RGB values (and optionally an alpha channel)
 - an HSL object
 
